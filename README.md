@@ -396,15 +396,208 @@ ls ~/.claude/hooks/*.py 2>/dev/null | wc -l
 
 ## Contribuindo
 
-Contribuições são muito bem-vindas! Veja as [issues abertas](https://github.com/SynkraAI/aios-dashboard/issues).
+Contribuições são muito bem-vindas! Este é um projeto em fase inicial e há muito espaço para melhorias.
 
-**Como contribuir:**
+### Tipos de Contribuição
 
-1. Fork o repositório
-2. Crie uma branch: `git checkout -b minha-feature`
-3. Faça suas alterações
-4. Teste localmente
-5. Abra um Pull Request
+| Tipo | Descrição | Dificuldade |
+|------|-----------|-------------|
+| **Bug fixes** | Corrigir problemas reportados | Fácil |
+| **Documentação** | Melhorar README, adicionar guias | Fácil |
+| **UI/UX** | Melhorar interface, adicionar temas | Médio |
+| **Novos componentes** | Adicionar visualizações | Médio |
+| **Novas views** | Criar páginas novas no dashboard | Avançado |
+| **Server features** | Adicionar endpoints, melhorar performance | Avançado |
+
+### Passo a Passo para Contribuir
+
+#### 1. Fork e Clone
+
+```bash
+# Fork pelo GitHub, depois clone seu fork
+git clone https://github.com/SEU_USUARIO/aios-dashboard.git
+cd aios-dashboard
+
+# Adicione o repositório original como upstream
+git remote add upstream https://github.com/SynkraAI/aios-dashboard.git
+```
+
+#### 2. Crie uma Branch
+
+```bash
+git checkout -b feature/minha-nova-feature
+```
+
+**Convenção de nomes:**
+
+| Prefixo | Uso |
+|---------|-----|
+| `feature/` | Nova funcionalidade |
+| `fix/` | Correção de bug |
+| `docs/` | Documentação |
+| `refactor/` | Refatoração de código |
+| `ui/` | Melhorias visuais |
+
+#### 3. Faça suas alterações
+
+Desenvolva sua feature seguindo os padrões do projeto:
+
+- **React**: Componentes funcionais com hooks
+- **TypeScript**: Tipagem obrigatória
+- **Tailwind CSS**: Para estilos
+- **Zustand**: Para estado global
+
+#### 4. Teste localmente
+
+```bash
+# Lint
+npm run lint --prefix apps/dashboard
+
+# Type check
+npm run typecheck --prefix apps/dashboard
+
+# Testes
+npm test --prefix apps/dashboard
+
+# Rode o dashboard e verifique visualmente
+npm run dev --prefix apps/dashboard
+```
+
+#### 5. Commit com mensagem clara
+
+Usamos [Conventional Commits](https://www.conventionalcommits.org/):
+
+```bash
+# Formato
+<tipo>: <descrição curta>
+
+# Exemplos
+git commit -m "feat: add dark mode toggle"
+git commit -m "fix: resolve websocket reconnection issue"
+git commit -m "docs: improve installation instructions"
+git commit -m "ui: improve kanban card hover state"
+```
+
+**Tipos de commit:**
+- `feat` - Nova funcionalidade
+- `fix` - Correção de bug
+- `docs` - Documentação
+- `ui` - Mudanças visuais
+- `refactor` - Refatoração
+- `test` - Testes
+- `chore` - Manutenção
+
+#### 6. Push e crie o Pull Request
+
+```bash
+# Push para seu fork
+git push origin feature/minha-nova-feature
+```
+
+Depois, abra um Pull Request no GitHub:
+
+1. Vá para https://github.com/SynkraAI/aios-dashboard
+2. Clique em "Pull Requests" → "New Pull Request"
+3. Selecione "compare across forks"
+4. Selecione seu fork e branch
+5. Preencha o template do PR
+
+### Template de Pull Request
+
+```markdown
+## Descrição
+
+O que este PR faz? Por que é necessário?
+
+## Tipo de mudança
+
+- [ ] Bug fix
+- [ ] Nova feature
+- [ ] Melhoria de UI
+- [ ] Documentação
+- [ ] Refatoração
+
+## Como testar
+
+1. Passo 1
+2. Passo 2
+3. Resultado esperado
+
+## Screenshots (se aplicável)
+
+[Adicione screenshots aqui]
+
+## Checklist
+
+- [ ] Meu código segue o estilo do projeto
+- [ ] Testei localmente
+- [ ] Lint passa sem erros
+- [ ] TypeScript compila sem erros
+```
+
+### Estrutura do Código
+
+```
+src/
+├── app/                    # Páginas (App Router)
+├── components/
+│   ├── ui/                 # Componentes base (Button, Card, etc)
+│   ├── kanban/             # Componentes do Kanban
+│   ├── monitor/            # Componentes do Monitor
+│   ├── squads/             # Componentes de Squads
+│   └── ...
+├── hooks/                  # React hooks customizados
+├── stores/                 # Estado global (Zustand)
+├── lib/                    # Utilitários
+└── types/                  # Tipos TypeScript
+```
+
+### Adicionando um Novo Componente
+
+```tsx
+// src/components/meu-componente/MeuComponente.tsx
+
+'use client';
+
+import { memo } from 'react';
+import { cn } from '@/lib/utils';
+
+interface MeuComponenteProps {
+  className?: string;
+  // ... outras props
+}
+
+export const MeuComponente = memo(function MeuComponente({
+  className,
+  ...props
+}: MeuComponenteProps) {
+  return (
+    <div className={cn('base-classes', className)}>
+      {/* conteúdo */}
+    </div>
+  );
+});
+```
+
+### Adicionando uma Nova View
+
+1. Crie o componente em `src/components/minha-view/`
+2. Adicione o case em `src/app/page.tsx` no `ViewContent`
+3. Adicione o item na sidebar em `src/components/layout/Sidebar.tsx`
+4. Adicione o tipo em `src/types/index.ts`
+
+### Dicas Importantes
+
+- **Não quebre o que funciona** — Teste suas mudanças
+- **Mantenha PRs pequenos** — Mais fácil de revisar
+- **Documente código complexo** — Ajuda outros contribuidores
+- **Pergunte antes de grandes mudanças** — Abra uma issue primeiro
+
+### Obtendo Ajuda
+
+- **Issues**: [Abrir issue](https://github.com/SynkraAI/aios-dashboard/issues)
+- **Discussões**: [Iniciar discussão](https://github.com/SynkraAI/aios-dashboard/discussions)
+- **AIOS Core**: [Comunidade AIOS](https://github.com/SynkraAI/aios-core/discussions)
 
 ---
 
