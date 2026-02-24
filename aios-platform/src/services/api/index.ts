@@ -1,8 +1,8 @@
 export { apiClient, type StreamCallbacks } from './client';
-export { squadsApi, mockSquads } from './squads';
-export { agentsApi, mockAgents } from './agents';
-export { executeApi, mockExecutionHistory, buildExecuteRequest } from './execute';
-export { workflowsApi, mockWorkflows, mockExecutions } from './workflows';
+export { squadsApi } from './squads';
+export { agentsApi } from './agents';
+export { executeApi, buildExecuteRequest } from './execute';
+export { workflowsApi } from './workflows';
 export { analyticsApi } from './analytics';
 export { tasksApi } from './tasks';
 export type { Task, TaskAgent, TaskSquadSelection, TaskWorkflow, CreateTaskResponse } from './tasks';

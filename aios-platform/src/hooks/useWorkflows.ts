@@ -2,8 +2,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, useCallback } from 'react';
 import {
   workflowsApi,
-  mockWorkflows,
-  mockExecutions,
   type WorkflowSummary,
   type Workflow,
   type WorkflowExecution,
@@ -11,22 +9,11 @@ import {
   type WorkflowSchema,
 } from '../services/api';
 
-const USE_MOCK = import.meta.env.VITE_USE_MOCK !== 'false';
-
 // Get workflow schema
 export function useWorkflowSchema() {
   return useQuery<WorkflowSchema>({
     queryKey: ['workflowSchema'],
     queryFn: async () => {
-      if (USE_MOCK) {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-        return {
-          workflowStatus: { draft: 'draft', active: 'active', paused: 'paused', archived: 'archived' },
-          executionStatus: { pending: 'pending', running: 'running', completed: 'completed', failed: 'failed', cancelled: 'cancelled', waiting: 'waiting' },
-          stepTypes: { agent: 'agent', conditional: 'conditional', parallel: 'parallel', wait: 'wait', transform: 'transform', loop: 'loop' },
-          triggerTypes: { manual: 'manual', schedule: 'schedule', event: 'event', webhook: 'webhook' },
-        };
-      }
       return workflowsApi.getSchema();
     },
     staleTime: 60 * 60 * 1000, // 1 hour
@@ -38,19 +25,6 @@ export function useWorkflows(params?: { status?: string; name?: string }) {
   return useQuery<WorkflowSummary[]>({
     queryKey: ['workflows', params],
     queryFn: async () => {
-      if (USE_MOCK) {
-        await new Promise((resolve) => setTimeout(resolve, 400));
-        let workflows = [...mockWorkflows];
-        if (params?.status) {
-          workflows = workflows.filter((w) => w.status === params.status);
-        }
-        if (params?.name) {
-          workflows = workflows.filter((w) =>
-            w.name.toLowerCase().includes(params.name!.toLowerCase())
-          );
-        }
-        return workflows;
-      }
       const response = await workflowsApi.getWorkflows(params);
       return response.workflows;
     },
@@ -65,20 +39,6 @@ export function useWorkflow(id: string | null) {
     queryKey: ['workflow', id],
     queryFn: async () => {
       if (!id) return null;
-      if (USE_MOCK) {
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        const summary = mockWorkflows.find((w) => w.id === id);
-        if (!summary) return null;
-        return {
-          ...summary,
-          steps: [
-            { id: 'step-1', type: 'task' as const, name: 'Analyze input' },
-            { id: 'step-2', type: 'task' as const, name: 'Generate content' },
-            { id: 'step-3', type: 'condition' as const, name: 'Check quality' },
-            { id: 'step-4', type: 'task' as const, name: 'Finalize output' },
-          ],
-        };
-      }
       return workflowsApi.getWorkflow(id);
     },
     enabled: !!id,
@@ -92,16 +52,6 @@ export function useWorkflowStats(id: string | null) {
     queryKey: ['workflowStats', id],
     queryFn: async () => {
       if (!id) return null;
-      if (USE_MOCK) {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-        return {
-          totalExecutions: 25,
-          successfulExecutions: 22,
-          failedExecutions: 3,
-          averageDuration: 180,
-          lastExecutedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-        };
-      }
       return workflowsApi.getWorkflowStats(id);
     },
     enabled: !!id,
@@ -118,20 +68,6 @@ export function useWorkflowExecutions(params?: {
   return useQuery<WorkflowExecution[]>({
     queryKey: ['workflowExecutions', params],
     queryFn: async () => {
-      if (USE_MOCK) {
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        let executions = [...mockExecutions];
-        if (params?.workflowId) {
-          executions = executions.filter((e) => e.workflowId === params.workflowId);
-        }
-        if (params?.status) {
-          executions = executions.filter((e) => e.status === params.status);
-        }
-        if (params?.limit) {
-          executions = executions.slice(0, params.limit);
-        }
-        return executions;
-      }
       const response = await workflowsApi.getExecutions(params);
       return response.executions;
     },
@@ -146,10 +82,6 @@ export function useWorkflowExecution(id: string | null) {
     queryKey: ['workflowExecution', id],
     queryFn: async () => {
       if (!id) return null;
-      if (USE_MOCK) {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-        return mockExecutions.find((e) => e.id === id) || null;
-      }
       return workflowsApi.getExecution(id);
     },
     enabled: !!id,
@@ -169,15 +101,6 @@ export function useCreateWorkflow() {
 
   return useMutation({
     mutationFn: async (workflow: Omit<Workflow, 'id' | 'createdAt' | 'updatedAt' | 'status'>) => {
-      if (USE_MOCK) {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        return {
-          ...workflow,
-          id: `wf-${Date.now()}`,
-          status: 'draft' as const,
-          createdAt: new Date().toISOString(),
-        };
-      }
       return workflowsApi.createWorkflow(workflow);
     },
     onSuccess: () => {
@@ -192,11 +115,6 @@ export function useUpdateWorkflow() {
 
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: Partial<Workflow> }) => {
-      if (USE_MOCK) {
-        await new Promise((resolve) => setTimeout(resolve, 400));
-        const existing = mockWorkflows.find((w) => w.id === id);
-        return { ...existing, ...updates } as Workflow;
-      }
       return workflowsApi.updateWorkflow(id, updates);
     },
     onSuccess: (_, variables) => {
@@ -212,10 +130,6 @@ export function useDeleteWorkflow() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      if (USE_MOCK) {
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        return { success: true, message: 'Workflow deleted' };
-      }
       return workflowsApi.deleteWorkflow(id);
     },
     onSuccess: () => {
@@ -230,11 +144,6 @@ export function useActivateWorkflow() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      if (USE_MOCK) {
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        const workflow = mockWorkflows.find((w) => w.id === id);
-        return { success: true, message: 'Workflow activated', workflow: { ...workflow, status: 'active' as const } };
-      }
       return workflowsApi.activateWorkflow(id);
     },
     onSuccess: (_, id) => {
@@ -250,11 +159,6 @@ export function usePauseWorkflow() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      if (USE_MOCK) {
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        const workflow = mockWorkflows.find((w) => w.id === id);
-        return { success: true, message: 'Workflow paused', workflow: { ...workflow, status: 'paused' as const } };
-      }
       return workflowsApi.pauseWorkflow(id);
     },
     onSuccess: (_, id) => {
@@ -278,18 +182,6 @@ export function useExecuteWorkflow() {
       input?: Record<string, unknown>;
       options?: { force?: boolean; metadata?: Record<string, unknown> };
     }) => {
-      if (USE_MOCK) {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        return {
-          message: 'Workflow execution started',
-          execution: {
-            id: `exec-${Date.now()}`,
-            workflowId: id,
-            status: 'pending' as const,
-            correlationId: `corr-${Date.now()}`,
-          },
-        };
-      }
       return workflowsApi.executeWorkflow(id, input, options);
     },
     onSuccess: () => {
@@ -304,11 +196,6 @@ export function useCancelExecution() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      if (USE_MOCK) {
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        const execution = mockExecutions.find((e) => e.id === id);
-        return { success: true, message: 'Execution cancelled', execution: { ...execution, status: 'cancelled' as const } };
-      }
       return workflowsApi.cancelExecution(id);
     },
     onSuccess: () => {

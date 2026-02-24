@@ -237,11 +237,9 @@ export function SettingsPage() {
   );
 }
 
-// Dashboard Settings (Demo Mode, Auto Refresh, Agent Colors)
+// Dashboard Settings (Auto Refresh, Agent Colors)
 function DashboardSettings() {
   const {
-    useMockData,
-    setUseMockData,
     autoRefresh,
     setAutoRefresh,
     refreshInterval,
@@ -263,31 +261,6 @@ function DashboardSettings() {
 
   return (
     <div className="space-y-6">
-      {/* Demo Mode */}
-      <GlassCard>
-        <h2 className="text-lg font-semibold text-primary mb-4">Demo Mode</h2>
-        <div className="space-y-4">
-          <SettingToggle
-            label="Usar dados mockados"
-            description="Exibe dados de demonstração em todas as views"
-            defaultChecked={useMockData}
-            onChange={setUseMockData}
-          />
-          <div className={cn(useMockData && 'opacity-50 pointer-events-none')}>
-            <label className="block text-sm text-secondary mb-2">Diretório de stories</label>
-            <GlassInput
-              value={storiesPath}
-              onChange={(e) => setStoriesPath(e.target.value)}
-              placeholder="docs/stories"
-              disabled={useMockData}
-            />
-            <p className="text-[10px] text-tertiary mt-1">
-              Caminho relativo para as stories do projeto
-            </p>
-          </div>
-        </div>
-      </GlassCard>
-
       {/* Auto Refresh */}
       <GlassCard>
         <h2 className="text-lg font-semibold text-primary mb-4">Auto Refresh</h2>

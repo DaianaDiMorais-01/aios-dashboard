@@ -18,9 +18,6 @@ const DEFAULT_AGENT_COLORS: AgentColorConfig[] = [
 ];
 
 interface SettingsState {
-  // Demo Mode
-  useMockData: boolean;
-
   // Auto Refresh
   autoRefresh: boolean;
   refreshInterval: number; // seconds
@@ -33,7 +30,6 @@ interface SettingsState {
 }
 
 interface SettingsActions {
-  setUseMockData: (value: boolean) => void;
   setAutoRefresh: (value: boolean) => void;
   setRefreshInterval: (seconds: number) => void;
   setStoriesPath: (path: string) => void;
@@ -42,7 +38,6 @@ interface SettingsActions {
 }
 
 const defaultState: SettingsState = {
-  useMockData: true,
   autoRefresh: true,
   refreshInterval: 30,
   storiesPath: 'docs/stories',
@@ -53,8 +48,6 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
   persist(
     (set) => ({
       ...defaultState,
-
-      setUseMockData: (value) => set({ useMockData: value }),
 
       setAutoRefresh: (value) => set({ autoRefresh: value }),
 
@@ -74,7 +67,6 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
     {
       name: 'aios-settings',
       partialize: (state) => ({
-        useMockData: state.useMockData,
         autoRefresh: state.autoRefresh,
         refreshInterval: state.refreshInterval,
         storiesPath: state.storiesPath,

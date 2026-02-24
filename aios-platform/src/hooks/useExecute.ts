@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { executeApi, mockExecutionHistory, buildExecuteRequest } from '../services/api';
+import { executeApi, buildExecuteRequest } from '../services/api';
 import { useChatStore } from '../stores/chatStore';
 import { useExecutionLogStore } from '../stores/executionLogStore';
 import type {
@@ -66,8 +66,6 @@ function extractImagesFromToolResults(toolResults: StreamToolsEvent['toolResults
   return imageMarkdown.join('');
 }
 
-const USE_MOCK = import.meta.env.VITE_USE_MOCK !== 'false';
-
 interface ExecuteParams {
   sessionId: string;
   squadId: string;
@@ -93,53 +91,6 @@ export function useExecuteAgent() {
         content: message,
         attachments,
       });
-
-      if (USE_MOCK) {
-        // Simulate streaming response
-        setStreaming(true);
-
-        // Add initial agent message
-        const agentMessageId = addMessage(sessionId, {
-          role: 'agent',
-          content: '',
-          agentId,
-          agentName,
-          squadId,
-          squadType,
-          isStreaming: true,
-        });
-
-        // Simulate typing
-        const mockResponse = getMockResponse(message, agentName);
-        let currentContent = '';
-
-        for (const char of mockResponse) {
-          await new Promise((resolve) => setTimeout(resolve, 15 + Math.random() * 25));
-          currentContent += char;
-          updateMessage(sessionId, agentMessageId, currentContent);
-        }
-
-        setStreaming(false);
-
-        return {
-          executionId: `exec-${Date.now()}`,
-          status: 'completed',
-          result: {
-            agentId,
-            agentName,
-            message: mockResponse,
-            metadata: {
-              squad: squadId,
-              tier: 1,
-              provider: 'mock',
-              model: 'mock-model',
-              usage: { inputTokens: 100, outputTokens: 300 },
-              duration: 2.5,
-              processedAt: new Date().toISOString(),
-            },
-          },
-        };
-      }
 
       if (stream) {
         setStreaming(true);
@@ -300,10 +251,6 @@ export function useExecutionHistory(limit: number = 20) {
   return useQuery<ExecutionHistory>({
     queryKey: ['executionHistory', limit],
     queryFn: async () => {
-      if (USE_MOCK) {
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        return mockExecutionHistory;
-      }
       return executeApi.getHistory({ limit });
     },
     staleTime: 5 * 60 * 1000, // 5 minutes - reduce API calls
@@ -374,36 +321,3 @@ export function useLLMHealth() {
   });
 }
 
-// Mock responses based on prompt content
-function getMockResponse(prompt: string, agentName: string): string {
-  const lowerPrompt = prompt.toLowerCase();
-
-  if (lowerPrompt.includes('headline') || lowerPrompt.includes('título')) {
-    return `Aqui estão algumas opções de headline:\n\n1. **"Menos caos, mais resultados"** - Direto e impactante\n\n2. **"Seu dia tem 24 horas. Por que desperdiçar 8?"** - Provocativo\n\n3. **"A produtividade que você merecia"** - Emocional\n\nRecomendo testar a opção 2 em A/B testing - ela tem alto potencial de engajamento por desafiar o status quo do leitor.`;
-  }
-
-  if (lowerPrompt.includes('roteiro') || lowerPrompt.includes('script') || lowerPrompt.includes('vídeo')) {
-    return `📹 **Roteiro para Reels (60s)**\n\n**HOOK (0-3s):**\n"Pare de fazer isso agora." [olhar direto para câmera]\n\n**PROBLEMA (3-15s):**\n"Você trabalha 10 horas por dia e ainda assim sente que não produz nada?"\n\n**VIRADA (15-40s):**\n"O problema não é você. É o sistema que você usa. Deixa eu te mostrar..."\n[Demonstração rápida do método/produto]\n\n**CTA (40-60s):**\n"Link na bio. Sua vida produtiva começa agora."\n\n🎯 **Dica:** Grave 3 versões do hook e teste.`;
-  }
-
-  if (lowerPrompt.includes('code') || lowerPrompt.includes('código') || lowerPrompt.includes('solid')) {
-    return `🧹 **Análise de Clean Code**\n\nIdentifiquei os seguintes pontos:\n\n**Violações SOLID encontradas:**\n\n1. **SRP (Single Responsibility)**: A classe \`UserService\` está fazendo validação, persistência e envio de emails. Sugiro separar em \`UserValidator\`, \`UserRepository\` e \`EmailService\`.\n\n2. **OCP (Open/Closed)**: O método \`calculateDiscount\` usa switch/case para tipos de cliente. Use Strategy Pattern.\n\n3. **DIP (Dependency Inversion)**: Dependência direta de \`MySQLConnection\`. Injete \`IDatabase\` interface.\n\n**Próximos passos:**\n- Extrair interfaces\n- Aplicar injeção de dependência\n- Criar testes unitários`;
-  }
-
-  if (lowerPrompt.includes('paleta') || lowerPrompt.includes('cor') || lowerPrompt.includes('design')) {
-    return `🎨 **Paleta de Cores Sugerida**\n\n| Função | Cor | Hex |\n|--------|-----|-----|\n| Primária | Azul Profundo | #2D3436 |\n| Secundária | Coral Suave | #FF7675 |\n| Accent | Dourado | #FDCB6E |\n| Background | Off-White | #F8F9FA |\n| Text | Grafite | #636E72 |\n\n✨ **Racional:** Esta paleta equilibra profissionalismo (azul/grafite) com energia (coral/dourado), ideal para marcas que querem transmitir confiança com um toque de modernidade.`;
-  }
-
-  // Thumbnail generation mock - demonstrates media response
-  if (lowerPrompt.includes('thumbnail') || lowerPrompt.includes('thumb') || lowerPrompt.includes('miniatura')) {
-    return `🖼️ **Thumbnail Gerada!**\n\nCriei uma thumbnail otimizada para o seu vídeo com os seguintes elementos:\n\n**Elementos visuais:**\n- Fundo com gradiente vibrante (alta visibilidade no feed)\n- Texto em bold com outline (legível em qualquer tamanho)\n- Expressão facial de surpresa/curiosidade (gatilho emocional)\n- Contraste de cores complementares\n\n**Especificações técnicas:**\n- Resolução: 1280x720px (HD)\n- Formato: PNG com transparência\n- Safe zone: texto dentro da área segura\n\n**Preview da thumbnail:**\n\n![Thumbnail gerada para YouTube](https://picsum.photos/1280/720?random=${Date.now()})\n\n---\n\n💡 **Dica:** Teste esta thumb contra sua thumb atual em A/B testing no YouTube Studio!\n\nClique na imagem para ampliar e baixar.`;
-  }
-
-  // Image request mock
-  if (lowerPrompt.includes('imagem') || lowerPrompt.includes('image') || lowerPrompt.includes('foto') || lowerPrompt.includes('banner')) {
-    return `🎨 **Imagem Criada!**\n\nAqui está a imagem solicitada:\n\n![Imagem gerada](https://picsum.photos/800/600?random=${Date.now()})\n\n**Características:**\n- Alta resolução para web e redes sociais\n- Proporção otimizada para múltiplas plataformas\n- Composição balanceada\n\nVocê pode clicar na imagem para ampliar e fazer download direto.\n\nDeseja algum ajuste?`;
-  }
-
-  // Default response
-  return `Entendi sua solicitação! Com base no que você pediu, aqui está minha análise:\n\n${prompt}\n\n---\n\n**Próximos passos sugeridos:**\n1. Validar a abordagem com stakeholders\n2. Criar um protótipo inicial\n3. Iterar baseado em feedback\n\nPosso detalhar qualquer um desses pontos. É só pedir! 🚀`;
-}
