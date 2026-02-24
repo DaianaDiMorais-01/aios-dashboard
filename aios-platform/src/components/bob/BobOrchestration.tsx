@@ -1,7 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Cpu,
-  Play,
   CheckCircle2,
   AlertTriangle,
   Loader2,
@@ -19,36 +18,6 @@ import {
 import { useBobStore } from '../../stores/bobStore';
 import type { Pipeline, PipelinePhase, BobAgent, BobDecision, BobError } from '../../stores/bobStore';
 import { cn } from '../../lib/utils';
-
-// ---------- Mock data hook ----------
-function useBobMock() {
-  const mockPipeline: Pipeline = {
-    status: 'active',
-    currentPhase: 'implementation',
-    phases: [
-      { id: 'analysis', label: 'Analysis', status: 'completed', duration: '45s' },
-      { id: 'planning', label: 'Planning', status: 'completed', duration: '1m 20s' },
-      { id: 'implementation', label: 'Implementation', status: 'in_progress', progress: 45 },
-      { id: 'testing', label: 'Testing', status: 'pending' },
-      { id: 'review', label: 'Review', status: 'pending' },
-    ],
-    agents: [
-      { id: 'dev', name: 'AIOS Dev', task: 'Implementing feature', status: 'working' },
-      { id: 'architect', name: 'AIOS Architect', task: 'Architecture review', status: 'completed' },
-    ],
-    errors: [],
-    decisions: [
-      {
-        id: '1',
-        message: 'Use SSE instead of WebSocket for real-time updates?',
-        severity: 'info',
-        timestamp: new Date().toISOString(),
-      },
-    ],
-  };
-
-  return { mockPipeline };
-}
 
 // ---------- Phase Step ----------
 function PhaseStep({ phase, index, total }: { phase: PipelinePhase; index: number; total: number }) {
@@ -202,7 +171,7 @@ function ErrorCard({ error }: { error: BobError }) {
 }
 
 // ---------- Inactive State ----------
-function InactiveState({ onActivate }: { onActivate: () => void }) {
+function InactiveState() {
   return (
     <div className="h-full flex items-center justify-center">
       <motion.div
@@ -213,13 +182,10 @@ function InactiveState({ onActivate }: { onActivate: () => void }) {
         <div className="flex items-center justify-center h-16 w-16 rounded-2xl glass-subtle mx-auto mb-4">
           <Cpu className="h-8 w-8 text-tertiary" />
         </div>
-        <h2 className="text-lg font-semibold text-primary mb-1">Bob is inactive</h2>
-        <p className="text-sm text-secondary mb-4">
-          Start a task to activate Bob orchestration
+        <h2 className="text-lg font-semibold text-primary mb-1">No active orchestration</h2>
+        <p className="text-sm text-secondary">
+          Bob orchestration will appear here when a pipeline is running.
         </p>
-        <GlassButton variant="primary" leftIcon={<Play className="h-4 w-4" />} onClick={onActivate}>
-          Load Demo Pipeline
-        </GlassButton>
       </motion.div>
     </div>
   );
@@ -316,11 +282,6 @@ function ActiveState({ pipeline, onResolveDecision }: { pipeline: Pipeline; onRe
 // ---------- Main Component ----------
 export default function BobOrchestration() {
   const { isActive, pipeline, setPipeline, resolveDecision } = useBobStore();
-  const { mockPipeline } = useBobMock();
-
-  const handleActivateDemo = () => {
-    setPipeline(mockPipeline);
-  };
 
   const handleReset = () => {
     setPipeline(null);
@@ -363,7 +324,7 @@ export default function BobOrchestration() {
             exit={{ opacity: 0 }}
             className="flex-1"
           >
-            <InactiveState onActivate={handleActivateDemo} />
+            <InactiveState />
           </motion.div>
         ) : (
           <motion.div

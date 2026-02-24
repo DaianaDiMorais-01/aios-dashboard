@@ -24,59 +24,54 @@ interface MonitorState {
   clearEvents: () => void;
   setConnected: (connected: boolean) => void;
   setCurrentTool: (tool: { name: string; startedAt: string } | null) => void;
+  connectToMonitor: () => void;
+  disconnectFromMonitor: () => void;
 }
 
-// Generate mock events with timestamps within last 5 minutes
-function generateMockEvents(): MonitorEvent[] {
-  const now = Date.now();
-  const events: Omit<MonitorEvent, 'id' | 'timestamp'>[] = [
-    { type: 'system', agent: 'SYNAPSE', description: 'Engine initialized — 8 layers loaded', success: true },
-    { type: 'tool_call', agent: 'AIOS Dev', description: 'Read src/components/ui/GlassCard.tsx', duration: 45, success: true },
-    { type: 'tool_call', agent: 'AIOS Dev', description: 'Grep "StatusDot" in src/', duration: 120, success: true },
-    { type: 'message', agent: 'AIOS Dev', description: 'Starting implementation of TerminalCard component' },
-    { type: 'tool_call', agent: 'AIOS QA', description: 'Bash: npm run typecheck', duration: 3200, success: true },
-    { type: 'tool_call', agent: 'AIOS Dev', description: 'Write src/components/terminals/TerminalCard.tsx', duration: 89, success: true },
-    { type: 'system', agent: 'IDS', description: 'Gate G3 passed — architecture validation OK', success: true },
-    { type: 'error', agent: 'AIOS QA', description: 'Test failed: useChat.test.ts — timeout exceeded', success: false },
-    { type: 'tool_call', agent: 'AIOS Dev', description: 'Edit src/hooks/useChat.ts — fix timeout handling', duration: 156, success: true },
-    { type: 'tool_call', agent: 'AIOS QA', description: 'Bash: npm run test -- --reporter=verbose', duration: 8500, success: true },
-    { type: 'message', agent: 'AIOS Architect', description: 'Reviewing component hierarchy for Phase 4' },
-    { type: 'tool_call', agent: 'AIOS DevOps', description: 'Bash: git status --short', duration: 210, success: true },
-    { type: 'system', agent: 'SYNAPSE', description: 'L2 agent context injected for aios-dev', success: true },
-    { type: 'tool_call', agent: 'AIOS Dev', description: 'Glob **/*.test.ts in src/', duration: 35, success: true },
-    { type: 'tool_call', agent: 'AIOS PM', description: 'Read docs/stories/story-4.1.md', duration: 62, success: true },
-    { type: 'message', agent: 'AIOS PM', description: 'Story AIOS-42 progress updated to 75%' },
-    { type: 'tool_call', agent: 'AIOS Dev', description: 'Write src/stores/monitorStore.ts', duration: 78, success: true },
-    { type: 'error', agent: 'AIOS Dev', description: 'Lint warning: unused import in TerminalsView.tsx', success: false },
-    { type: 'tool_call', agent: 'AIOS Dev', description: 'Edit src/components/terminals/TerminalsView.tsx — remove unused import', duration: 23, success: true },
-    { type: 'system', agent: 'COA', description: 'Campaign optimization analysis scheduled for 08:00 BRT', success: true },
-  ];
+const MONITOR_URL = import.meta.env.VITE_MONITOR_URL || 'http://localhost:4001';
+const WS_URL = MONITOR_URL.replace(/^http/, 'ws');
 
-  return events.map((evt, i) => ({
-    ...evt,
-    id: `evt-${i + 1}`,
-    // Spread events across last 5 minutes (300s), oldest first
-    timestamp: new Date(now - (events.length - i) * 15000).toISOString(),
-  }));
+let ws: WebSocket | null = null;
+let reconnectAttempts = 0;
+let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+const MAX_RECONNECT_ATTEMPTS = 5;
+
+// Map server event to MonitorEvent
+function mapServerEvent(raw: Record<string, unknown>): MonitorEvent {
+  const data = (raw.data || raw) as Record<string, unknown>;
+  const type = String(raw.type || data.type || 'system');
+
+  // Map server event types to our types
+  let mappedType: MonitorEvent['type'] = 'system';
+  if (type.includes('Tool') || type === 'tool_call') mappedType = 'tool_call';
+  else if (type === 'message' || type === 'UserPromptSubmit') mappedType = 'message';
+  else if (type === 'error' || data.is_error) mappedType = 'error';
+
+  const toolName = data.tool_name as string | undefined;
+  const description =
+    (data.description as string) ||
+    (toolName ? `${type}: ${toolName}` : String(data.tool_result || type));
+
+  return {
+    id: String(raw.id || data.id || `evt-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`),
+    timestamp: String(raw.timestamp || data.timestamp || new Date().toISOString()),
+    type: mappedType,
+    agent: String(data.aios_agent || data.agent || 'System'),
+    description,
+    duration: typeof data.duration === 'number' ? data.duration : undefined,
+    success: data.is_error === true ? false : data.success !== undefined ? Boolean(data.success) : undefined,
+  };
 }
 
-const mockEvents = generateMockEvents();
-
-const errorCount = mockEvents.filter((e) => e.type === 'error').length;
-const toolCalls = mockEvents.filter((e) => e.type === 'tool_call');
-const successfulTools = toolCalls.filter((e) => e.success);
-
-export const useMonitorStore = create<MonitorState>((set) => ({
-  connected: true,
-  events: mockEvents,
-  currentTool: { name: 'Edit', startedAt: new Date(Date.now() - 2400).toISOString() },
+export const useMonitorStore = create<MonitorState>((set, get) => ({
+  connected: false,
+  events: [],
+  currentTool: null,
   stats: {
-    total: mockEvents.length,
-    successRate: toolCalls.length > 0
-      ? Math.round((successfulTools.length / toolCalls.length) * 100)
-      : 100,
-    errorCount,
-    activeSessions: 6,
+    total: 0,
+    successRate: 100,
+    errorCount: 0,
+    activeSessions: 0,
   },
 
   addEvent: (event) =>
@@ -101,10 +96,111 @@ export const useMonitorStore = create<MonitorState>((set) => ({
   clearEvents: () =>
     set({
       events: [],
-      stats: { total: 0, successRate: 100, errorCount: 0, activeSessions: 6 },
+      stats: { total: 0, successRate: 100, errorCount: 0, activeSessions: 0 },
     }),
 
   setConnected: (connected) => set({ connected }),
 
   setCurrentTool: (tool) => set({ currentTool: tool }),
+
+  connectToMonitor: () => {
+    const { disconnectFromMonitor } = get();
+    disconnectFromMonitor();
+    reconnectAttempts = 0;
+
+    // Load initial data
+    Promise.all([
+      fetch(`${MONITOR_URL}/events/recent?limit=50`).then((r) => r.ok ? r.json() : []),
+      fetch(`${MONITOR_URL}/stats`).then((r) => r.ok ? r.json() : null),
+    ])
+      .then(([recentEvents, serverStats]) => {
+        if (Array.isArray(recentEvents) && recentEvents.length > 0) {
+          const mapped = recentEvents.map(mapServerEvent);
+          set({ events: mapped.slice(-50) });
+        }
+        if (serverStats) {
+          set((state) => ({
+            stats: {
+              total: serverStats.total ?? state.stats.total,
+              successRate: serverStats.success_rate ?? state.stats.successRate,
+              errorCount: serverStats.errors ?? state.stats.errorCount,
+              activeSessions: serverStats.sessions_active ?? state.stats.activeSessions,
+            },
+          }));
+        }
+      })
+      .catch((err) => {
+        console.warn('[MonitorStore] Failed to load initial data:', err);
+      });
+
+    // Open WebSocket
+    function openWebSocket() {
+      try {
+        ws = new WebSocket(`${WS_URL}/stream`);
+      } catch {
+        console.warn('[MonitorStore] Failed to create WebSocket');
+        return;
+      }
+
+      ws.onopen = () => {
+        set({ connected: true });
+        reconnectAttempts = 0;
+      };
+
+      ws.onmessage = (msg) => {
+        try {
+          const payload = JSON.parse(msg.data);
+
+          if (payload.type === 'init' && Array.isArray(payload.events)) {
+            const mapped = payload.events.map(mapServerEvent);
+            set({ events: mapped.slice(-50) });
+            return;
+          }
+
+          if (payload.type === 'event' && payload.event) {
+            get().addEvent(mapServerEvent(payload.event));
+            return;
+          }
+
+          if (payload.type === 'pong') return;
+
+          // Treat as a raw event
+          get().addEvent(mapServerEvent(payload));
+        } catch {
+          // Ignore non-JSON messages
+        }
+      };
+
+      ws.onclose = () => {
+        set({ connected: false });
+        scheduleReconnect();
+      };
+
+      ws.onerror = () => {
+        set({ connected: false });
+      };
+    }
+
+    function scheduleReconnect() {
+      if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) return;
+      const delay = Math.min(1000 * 2 ** reconnectAttempts, 30000);
+      reconnectAttempts++;
+      reconnectTimer = setTimeout(openWebSocket, delay);
+    }
+
+    openWebSocket();
+  },
+
+  disconnectFromMonitor: () => {
+    if (reconnectTimer) {
+      clearTimeout(reconnectTimer);
+      reconnectTimer = null;
+    }
+    if (ws) {
+      ws.onclose = null; // Prevent reconnect on intentional close
+      ws.close();
+      ws = null;
+    }
+    set({ connected: false });
+  },
 }));

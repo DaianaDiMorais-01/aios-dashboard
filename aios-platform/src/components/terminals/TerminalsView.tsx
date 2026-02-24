@@ -5,86 +5,16 @@ import { TerminalCard } from './TerminalCard';
 import type { TerminalSession } from './TerminalCard';
 import { cn } from '../../lib/utils';
 
-const mockSessions: TerminalSession[] = [
-  {
-    id: '1',
-    agent: 'AIOS Dev',
-    status: 'working',
-    dir: '/src/components',
-    story: 'AIOS-42',
-    output: [
-      '$ npm run build',
-      '> tsc -b && vite build',
-      'Building for production...',
-      '✓ 847 modules transformed',
-      '✓ built in 3.2s',
-    ],
-  },
-  {
-    id: '2',
-    agent: 'AIOS QA',
-    status: 'working',
-    dir: '/tests',
-    story: 'AIOS-38',
-    output: [
-      '$ npm run test',
-      '> vitest run',
-      'Running tests...',
-      'PASS src/hooks/__tests__/useChat.test.ts',
-      'Tests: 12 passed, 12 total',
-    ],
-  },
-  {
-    id: '3',
-    agent: 'AIOS Architect',
-    status: 'idle',
-    dir: '/docs',
-    story: '',
-    output: ['$ echo "Ready"', 'Ready', '$'],
-  },
-  {
-    id: '4',
-    agent: 'AIOS DevOps',
-    status: 'working',
-    dir: '/',
-    story: 'AIOS-50',
-    output: [
-      '$ git push origin main',
-      'Enumerating objects: 42',
-      'Counting objects: 100%',
-      'Writing objects: 100%',
-      'remote: Resolving deltas: 100%',
-    ],
-  },
-  {
-    id: '5',
-    agent: 'AIOS Analyst',
-    status: 'idle',
-    dir: '/data',
-    story: '',
-    output: [
-      '$ node analyze.js',
-      'Analysis complete',
-      'Report saved to /tmp/report.md',
-      '$',
-    ],
-  },
-  {
-    id: '6',
-    agent: 'AIOS PM',
-    status: 'idle',
-    dir: '/',
-    story: '',
-    output: ['$'],
-  },
-];
-
 const MAX_SESSIONS = 12;
+
+// TODO: Connect to Monitor Server WebSocket for real terminal sessions
 
 export default function TerminalsView() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  const sessionCount = mockSessions.length;
+  // Empty state — no active terminal sessions
+  const sessions: TerminalSession[] = [];
+  const sessionCount = sessions.length;
   const capacityPercent = Math.round((sessionCount / MAX_SESSIONS) * 100);
 
   return (
@@ -143,30 +73,39 @@ export default function TerminalsView() {
       {/* Terminal sessions */}
       <SectionLabel count={sessionCount}>Active Sessions</SectionLabel>
 
-      <div
-        className={cn(
-          viewMode === 'grid'
-            ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4'
-            : 'flex flex-col gap-3',
-        )}
-      >
-        {mockSessions.map((session) => (
-          <TerminalCard
-            key={session.id}
-            session={session}
-            listMode={viewMode === 'list'}
-          />
-        ))}
-      </div>
+      {sessions.length > 0 ? (
+        <div
+          className={cn(
+            viewMode === 'grid'
+              ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4'
+              : 'flex flex-col gap-3',
+          )}
+        >
+          {sessions.map((session) => (
+            <TerminalCard
+              key={session.id}
+              session={session}
+              listMode={viewMode === 'list'}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex-1 flex items-center justify-center">
+          <GlassCard padding="lg" className="text-center max-w-sm">
+            <Terminal className="h-10 w-10 text-tertiary mx-auto mb-3" />
+            <h2 className="text-sm font-semibold text-primary mb-1">No active terminals</h2>
+            <p className="text-xs text-secondary">
+              Terminal sessions will appear here when agents start executing tasks.
+            </p>
+          </GlassCard>
+        </div>
+      )}
 
       {/* Footer */}
       <GlassCard padding="sm" variant="subtle" className="flex-shrink-0 mt-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 text-xs text-tertiary">
-              <span className="h-2 w-2 rounded-full bg-yellow-500/60" />
-              Demo Mode
-            </span>
+            <span className="text-xs text-tertiary">Capacity</span>
           </div>
           <div className="flex items-center gap-3">
             <span className="text-xs text-tertiary">

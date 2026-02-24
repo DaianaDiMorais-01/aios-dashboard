@@ -1,26 +1,43 @@
+import { useState, useEffect } from 'react';
 import { StatusDot } from '../ui';
 import { cn } from '../../lib/utils';
 import { Wifi, WifiOff, Bell } from 'lucide-react';
-
-// Mock data - will be replaced by real API data later
-const mockStatus = {
-  connected: true,
-  apiUsage: { current: 42, limit: 100 },
-  claudeReady: true,
-  bobActive: false,
-  activeAgent: null as string | null,
-  notificationCount: 3,
-};
+import { useLLMHealth, useTokenUsage } from '../../hooks/useExecute';
+import { useBobStore } from '../../stores/bobStore';
 
 export function StatusBar() {
-  const {
-    connected,
-    apiUsage,
-    claudeReady,
-    bobActive,
-    activeAgent,
-    notificationCount,
-  } = mockStatus;
+  // Network connectivity
+  const [connected, setConnected] = useState(navigator.onLine);
+  useEffect(() => {
+    const onOnline = () => setConnected(true);
+    const onOffline = () => setConnected(false);
+    window.addEventListener('online', onOnline);
+    window.addEventListener('offline', onOffline);
+    return () => {
+      window.removeEventListener('online', onOnline);
+      window.removeEventListener('offline', onOffline);
+    };
+  }, []);
+
+  // LLM health
+  const { data: health } = useLLMHealth();
+  const claudeReady = health?.claude?.available ?? false;
+
+  // Token usage
+  const { data: usage } = useTokenUsage();
+  const apiUsage = {
+    current: usage?.total?.requests ?? 0,
+    limit: 100,
+  };
+
+  // Bob status
+  const bobActive = useBobStore((s) => s.isActive);
+
+  // TODO: activeAgent requires a sessions API
+  const activeAgent: string | null = null;
+
+  // TODO: notificationCount requires a notifications system
+  const notificationCount = 0;
 
   return (
     <footer

@@ -188,10 +188,16 @@ function StatBlock({
 }
 
 export default function LiveMonitor() {
-  const { connected, events, currentTool, stats, clearEvents } =
+  const { connected, events, currentTool, stats, clearEvents, connectToMonitor, disconnectFromMonitor } =
     useMonitorStore();
 
   const feedRef = useRef<HTMLDivElement>(null);
+
+  // Connect to the Monitor Server on mount
+  useEffect(() => {
+    connectToMonitor();
+    return () => disconnectFromMonitor();
+  }, [connectToMonitor, disconnectFromMonitor]);
 
   // Auto-scroll to bottom when new events arrive
   useEffect(() => {

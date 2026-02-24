@@ -2,8 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useStoryStore, type Story } from '../stores/storyStore';
 import { useEffect } from 'react';
 
-const MOCK_STORIES: Story[] = [
-  // Backlog (3)
+// Fallback stories used when the /api/stories endpoint is unavailable.
+// Ensures the Kanban board always has visual content during development.
+const FALLBACK_STORIES: Story[] = [
   {
     id: 'story-001',
     title: 'Implement SSE streaming for agent responses',
@@ -57,8 +58,6 @@ const MOCK_STORIES: Story[] = [
     createdAt: '2026-02-16T09:00:00Z',
     updatedAt: '2026-02-16T09:00:00Z',
   },
-
-  // In Progress (2)
   {
     id: 'story-004',
     title: 'Build Kanban board with drag-and-drop',
@@ -100,8 +99,6 @@ const MOCK_STORIES: Story[] = [
     createdAt: '2026-02-19T09:00:00Z',
     updatedAt: '2026-02-20T10:00:00Z',
   },
-
-  // AI Review (2)
   {
     id: 'story-006',
     title: 'Add SYNAPSE context injection debug panel',
@@ -130,8 +127,6 @@ const MOCK_STORIES: Story[] = [
     createdAt: '2026-02-19T15:00:00Z',
     updatedAt: '2026-02-20T08:00:00Z',
   },
-
-  // Human Review (1)
   {
     id: 'story-008',
     title: 'Implement Bob orchestration timeline visualization',
@@ -147,8 +142,6 @@ const MOCK_STORIES: Story[] = [
     createdAt: '2026-02-17T08:00:00Z',
     updatedAt: '2026-02-20T07:00:00Z',
   },
-
-  // PR Created (1)
   {
     id: 'story-009',
     title: 'Add keyboard shortcuts overlay component',
@@ -164,8 +157,6 @@ const MOCK_STORIES: Story[] = [
     createdAt: '2026-02-16T10:00:00Z',
     updatedAt: '2026-02-19T16:00:00Z',
   },
-
-  // Done (3)
   {
     id: 'story-010',
     title: 'Create glass morphism design system foundation',
@@ -207,8 +198,6 @@ const MOCK_STORIES: Story[] = [
     createdAt: '2026-02-15T13:00:00Z',
     updatedAt: '2026-02-16T11:00:00Z',
   },
-
-  // Error (1)
   {
     id: 'story-013',
     title: 'Integrate COA analysis results into dashboard',
@@ -234,17 +223,14 @@ export function useStories() {
   const query = useQuery({
     queryKey: ['stories'],
     queryFn: async (): Promise<Story[]> => {
-      // When mock mode is active, return mock data
-      if (import.meta.env.VITE_USE_MOCK) {
-        // Simulate network delay
-        await new Promise((r) => setTimeout(r, 300));
-        return MOCK_STORIES;
+      try {
+        const res = await fetch('/api/stories');
+        if (!res.ok) throw new Error(`Failed to fetch stories: ${res.status}`);
+        return res.json();
+      } catch (err) {
+        console.warn('[useStories] API unavailable, using fallback data:', err);
+        return FALLBACK_STORIES;
       }
-
-      // Real API call would go here
-      const res = await fetch('/api/stories');
-      if (!res.ok) throw new Error('Failed to fetch stories');
-      return res.json();
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

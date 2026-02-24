@@ -1,10 +1,21 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  type LucideIcon,
+  User,
+  Settings,
+  Palette,
+  BarChart3,
+  BookOpen,
+  MessageSquare,
+  LogOut,
+} from 'lucide-react';
 import { GlassButton, Avatar, ThemeToggle } from '../ui';
 import { MobileMenuButton } from './Sidebar';
 import { useGlobalSearch } from '../search';
 import { useUIStore } from '../../stores/uiStore';
 import { cn, formatRelativeTime } from '../../lib/utils';
+import { ICON_SIZES } from '../../lib/icons';
 
 // Icons
 const SearchIcon = () => (
@@ -64,54 +75,22 @@ const MasterIcon = () => (
   </svg>
 );
 
-// Mock notifications
-const mockNotifications = [
-  {
-    id: '1',
-    type: 'success' as const,
-    title: 'Task concluída',
-    message: 'Luna finalizou a criação de headlines',
-    agentName: 'Luna',
-    squadType: 'copywriting',
-    time: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
-    read: false,
-  },
-  {
-    id: '2',
-    type: 'info' as const,
-    title: 'Nova mensagem',
-    message: 'Maya respondeu sua solicitação de paleta',
-    agentName: 'Maya',
-    squadType: 'design',
-    time: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
-    read: false,
-  },
-  {
-    id: '3',
-    type: 'warning' as const,
-    title: 'Agent ocupado',
-    message: 'Phoenix está processando outra tarefa',
-    agentName: 'Phoenix',
-    squadType: 'creator',
-    time: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
-    read: true,
-  },
-  {
-    id: '4',
-    type: 'success' as const,
-    title: 'Orquestração completa',
-    message: 'Campanha de lançamento coordenada com sucesso',
-    agentName: 'Orion',
-    squadType: 'orchestrator',
-    time: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    read: true,
-  },
-];
+// TODO: Replace with real notification system when available
+type Notification = {
+  id: string;
+  type: 'success' | 'info' | 'warning';
+  title: string;
+  message: string;
+  agentName: string;
+  squadType: string;
+  time: string;
+  read: boolean;
+};
 
 export function Header() {
   const { activityPanelOpen, toggleActivityPanel, workflowViewOpen, toggleWorkflowView, agentExplorerOpen, toggleAgentExplorer } = useUIStore();
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState(mockNotifications);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const globalSearch = useGlobalSearch();
 
   const notificationRef = useRef<HTMLDivElement>(null);
@@ -396,15 +375,15 @@ function UserMenu() {
 
             {/* Menu Items */}
             <div className="p-2">
-              <MenuItem icon="👤" label="Meu Perfil" onClick={() => { setCurrentView('settings'); setShowMenu(false); }} />
-              <MenuItem icon="⚙️" label="Configurações" onClick={() => { setCurrentView('settings'); setShowMenu(false); }} />
-              <MenuItem icon="🎨" label="Aparência" onClick={() => { setCurrentView('settings'); setShowMenu(false); }} />
-              <MenuItem icon="📊" label="Uso e Limites" onClick={() => { setCurrentView('dashboard'); setShowMenu(false); }} />
+              <MenuItem icon={User} label="Meu Perfil" onClick={() => { setCurrentView('settings'); setShowMenu(false); }} />
+              <MenuItem icon={Settings} label="Configurações" onClick={() => { setCurrentView('settings'); setShowMenu(false); }} />
+              <MenuItem icon={Palette} label="Aparência" onClick={() => { setCurrentView('settings'); setShowMenu(false); }} />
+              <MenuItem icon={BarChart3} label="Uso e Limites" onClick={() => { setCurrentView('dashboard'); setShowMenu(false); }} />
               <div className="h-px bg-glass-border my-2" />
-              <MenuItem icon="📖" label="Documentação" />
-              <MenuItem icon="💬" label="Suporte" />
+              <MenuItem icon={BookOpen} label="Documentação" />
+              <MenuItem icon={MessageSquare} label="Suporte" />
               <div className="h-px bg-glass-border my-2" />
-              <MenuItem icon="🚪" label="Sair" danger />
+              <MenuItem icon={LogOut} label="Sair" danger />
             </div>
           </motion.div>
         )}
@@ -414,13 +393,13 @@ function UserMenu() {
 }
 
 interface MenuItemProps {
-  icon: string;
+  icon: LucideIcon;
   label: string;
   danger?: boolean;
   onClick?: () => void;
 }
 
-function MenuItem({ icon, label, danger, onClick }: MenuItemProps) {
+function MenuItem({ icon: Icon, label, danger, onClick }: MenuItemProps) {
   return (
     <button
       onClick={onClick}
@@ -431,7 +410,7 @@ function MenuItem({ icon, label, danger, onClick }: MenuItemProps) {
           : 'text-primary hover:bg-white/10'
       )}
     >
-      <span>{icon}</span>
+      <Icon size={ICON_SIZES.md} />
       <span>{label}</span>
     </button>
   );
