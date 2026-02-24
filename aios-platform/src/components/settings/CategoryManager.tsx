@@ -5,6 +5,7 @@ import { useCategoryStore, type CategoryConfig } from '../../stores/categoryStor
 import { useSquads } from '../../hooks/useSquads';
 import { useToast } from '../ui/Toast';
 import { cn, getSquadTheme } from '../../lib/utils';
+import { getIconComponent, ICON_SIZES } from '../../lib/icons';
 import type { SquadType } from '../../types';
 
 // Icons
@@ -72,6 +73,12 @@ const squadTypeOptions: { value: SquadType; label: string }[] = [
   { value: 'design', label: 'Design' },
   { value: 'creator', label: 'Creator' },
   { value: 'orchestrator', label: 'Orchestrator' },
+  { value: 'content', label: 'Content' },
+  { value: 'development', label: 'Development' },
+  { value: 'engineering', label: 'Engineering' },
+  { value: 'analytics', label: 'Analytics' },
+  { value: 'marketing', label: 'Marketing' },
+  { value: 'advisory', label: 'Advisory' },
 ];
 
 // Get category colors from centralized theme
@@ -425,7 +432,7 @@ function CategoryItem({
               className="flex items-center gap-2 flex-1 text-left"
             >
               <ChevronIcon expanded={isExpanded} />
-              <span className="text-lg">{category.icon}</span>
+              {(() => { const Icon = getIconComponent(category.icon); return <Icon size={ICON_SIZES.lg} />; })()}
               <span className="text-primary font-medium">{category.name}</span>
               <span className="text-xs text-tertiary">({category.squads.length})</span>
             </button>

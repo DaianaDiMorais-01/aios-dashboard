@@ -36,6 +36,7 @@ import {
 } from 'lucide-react';
 import { GlassCard } from '../ui/GlassCard';
 import { GlassButton } from '../ui/GlassButton';
+import { getSquadInlineStyle } from '../../lib/theme';
 
 const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
@@ -119,30 +120,7 @@ const initialState: TaskState = {
   startTime: null,
 };
 
-// Squad color palette (updated 2026-02-06)
-const squadColors: Record<string, { bg: string; text: string; border: string; glow: string }> = {
-  'copywriting': { bg: 'rgba(249, 115, 22, 0.15)', text: 'rgb(251, 146, 60)', border: 'rgba(249, 115, 22, 0.3)', glow: 'rgba(249, 115, 22, 0.4)' },
-  'design-system': { bg: 'rgba(168, 85, 247, 0.15)', text: 'rgb(192, 132, 252)', border: 'rgba(168, 85, 247, 0.3)', glow: 'rgba(168, 85, 247, 0.4)' },
-  'creative-studio': { bg: 'rgba(168, 85, 247, 0.15)', text: 'rgb(192, 132, 252)', border: 'rgba(168, 85, 247, 0.3)', glow: 'rgba(168, 85, 247, 0.4)' },
-  'content-ecosystem': { bg: 'rgba(239, 68, 68, 0.15)', text: 'rgb(248, 113, 113)', border: 'rgba(239, 68, 68, 0.3)', glow: 'rgba(239, 68, 68, 0.4)' },
-  'youtube-lives': { bg: 'rgba(239, 68, 68, 0.15)', text: 'rgb(248, 113, 113)', border: 'rgba(239, 68, 68, 0.3)', glow: 'rgba(239, 68, 68, 0.4)' },
-  'media-buy': { bg: 'rgba(59, 130, 246, 0.15)', text: 'rgb(96, 165, 250)', border: 'rgba(59, 130, 246, 0.3)', glow: 'rgba(59, 130, 246, 0.4)' },
-  'funnel-creator': { bg: 'rgba(59, 130, 246, 0.15)', text: 'rgb(96, 165, 250)', border: 'rgba(59, 130, 246, 0.3)', glow: 'rgba(59, 130, 246, 0.4)' },
-  'sales': { bg: 'rgba(34, 197, 94, 0.15)', text: 'rgb(74, 222, 128)', border: 'rgba(34, 197, 94, 0.3)', glow: 'rgba(34, 197, 94, 0.4)' },
-  'data-analytics': { bg: 'rgba(20, 184, 166, 0.15)', text: 'rgb(45, 212, 191)', border: 'rgba(20, 184, 166, 0.3)', glow: 'rgba(20, 184, 166, 0.4)' },
-  'deep-scraper': { bg: 'rgba(236, 72, 153, 0.15)', text: 'rgb(244, 114, 182)', border: 'rgba(236, 72, 153, 0.3)', glow: 'rgba(236, 72, 153, 0.4)' },
-  'full-stack-dev': { bg: 'rgba(99, 102, 241, 0.15)', text: 'rgb(129, 140, 248)', border: 'rgba(99, 102, 241, 0.3)', glow: 'rgba(99, 102, 241, 0.4)' },
-  'aios-core-dev': { bg: 'rgba(99, 102, 241, 0.15)', text: 'rgb(129, 140, 248)', border: 'rgba(99, 102, 241, 0.3)', glow: 'rgba(99, 102, 241, 0.4)' },
-  'conselho': { bg: 'rgba(234, 179, 8, 0.15)', text: 'rgb(250, 204, 21)', border: 'rgba(234, 179, 8, 0.3)', glow: 'rgba(234, 179, 8, 0.4)' },
-  'infoproduct-creation': { bg: 'rgba(234, 179, 8, 0.15)', text: 'rgb(250, 204, 21)', border: 'rgba(234, 179, 8, 0.3)', glow: 'rgba(234, 179, 8, 0.4)' },
-  'orquestrador-global': { bg: 'rgba(6, 182, 212, 0.15)', text: 'rgb(34, 211, 238)', border: 'rgba(6, 182, 212, 0.3)', glow: 'rgba(6, 182, 212, 0.4)' },
-  'squad-creator': { bg: 'rgba(6, 182, 212, 0.15)', text: 'rgb(34, 211, 238)', border: 'rgba(6, 182, 212, 0.3)', glow: 'rgba(6, 182, 212, 0.4)' },
-  'operations-hub': { bg: 'rgba(6, 182, 212, 0.15)', text: 'rgb(34, 211, 238)', border: 'rgba(6, 182, 212, 0.3)', glow: 'rgba(6, 182, 212, 0.4)' },
-  'project-management-clickup': { bg: 'rgba(6, 182, 212, 0.15)', text: 'rgb(34, 211, 238)', border: 'rgba(6, 182, 212, 0.3)', glow: 'rgba(6, 182, 212, 0.4)' },
-  'default': { bg: 'rgba(107, 114, 128, 0.15)', text: 'rgb(156, 163, 175)', border: 'rgba(107, 114, 128, 0.3)', glow: 'rgba(107, 114, 128, 0.4)' },
-};
-
-const getSquadColor = (squadId: string) => squadColors[squadId] || squadColors.default;
+const getSquadColor = (squadId: string) => getSquadInlineStyle(squadId);
 
 // Phase configuration
 const phases = [

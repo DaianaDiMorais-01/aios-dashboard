@@ -445,11 +445,8 @@ function WorkflowNodeComponent({
           node.status === 'active' && colors?.glow
         )}
         style={{
-          boxShadow: node.status === 'active'
-            ? `0 0 25px ${node.squadType === 'copywriting' ? 'rgba(249,115,22,0.25)' :
-                         node.squadType === 'design' ? 'rgba(168,85,247,0.25)' :
-                         node.squadType === 'creator' ? 'rgba(34,197,94,0.25)' :
-                         node.squadType === 'orchestrator' ? 'rgba(6,182,212,0.25)' : 'rgba(255,255,255,0.1)'}`
+          boxShadow: node.status === 'active' && node.squadType
+            ? `0 0 25px color-mix(in srgb, ${getSquadTheme(node.squadType as SquadType).cssVar} 25%, transparent)`
             : 'none'
         }}
       >

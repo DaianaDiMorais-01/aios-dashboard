@@ -651,7 +651,7 @@ export function WorkflowExecutionLive({ state, onClose, orchestrationPlan }: Wor
                             `bg-gradient-to-r ${style.bg} to-transparent`,
                             isSelected && 'ring-1 ring-white/30'
                           )}
-                          style={{ border: '1px solid rgba(255,255,255,0.05)', borderLeftWidth: '2px' }}
+                          style={{ border: '1px solid var(--glass-border-color-subtle)', borderLeftWidth: '2px' }}
                         >
                           <div className="flex items-start justify-between gap-2 mb-1">
                             <div className="flex items-center gap-2">
@@ -952,7 +952,7 @@ export function WorkflowExecutionLive({ state, onClose, orchestrationPlan }: Wor
                               <div
                                 key={step.id}
                                 className={cn('rounded-lg p-2 border-l-2', style.border)}
-                                style={{ background: 'rgba(255,255,255,0.03)' }}
+                                style={{ background: 'var(--color-background-disabled)' }}
                               >
                                 <div className="flex items-center gap-2 mb-1">
                                   <Avatar name={agentName} size="sm" squadType={squadType as any} />
@@ -1352,19 +1352,30 @@ export function WorkflowExecutionLive({ state, onClose, orchestrationPlan }: Wor
 
 function StatBox({ label, value, color }: { label: string; value: number; color: 'green' | 'orange' | 'gray' }) {
   const colors = {
-    green: { text: 'text-green-400', bg: 'from-green-500/20', glow: 'rgba(34, 197, 94, 0.3)' },
-    orange: { text: 'text-orange-400', bg: 'from-orange-500/20', glow: 'rgba(249, 115, 22, 0.3)' },
-    gray: { text: 'text-gray-400', bg: 'from-gray-500/20', glow: 'rgba(156, 163, 175, 0.2)' },
+    green: {
+      text: 'text-status-success-muted',
+      bg: 'from-status-success-20',
+      glowVar: 'var(--color-status-success)',
+    },
+    orange: {
+      text: 'text-squad-copywriting-muted',
+      bg: 'from-squad-copywriting-20',
+      glowVar: 'var(--squad-copywriting-default)',
+    },
+    gray: {
+      text: 'text-squad-default-muted',
+      bg: 'from-squad-default-20',
+      glowVar: 'var(--squad-default-default)',
+    },
   };
 
   const style = colors[color];
 
   return (
     <div
-      className={cn('rounded-xl p-2.5 bg-gradient-to-b to-transparent', style.bg)}
+      className={cn('rounded-xl p-2.5 bg-gradient-to-b to-transparent border border-white/5', style.bg)}
       style={{
-        border: '1px solid rgba(255,255,255,0.05)',
-        boxShadow: value > 0 ? `0 0 15px ${style.glow}` : 'none'
+        boxShadow: value > 0 ? `0 0 15px color-mix(in srgb, ${style.glowVar} 30%, transparent)` : 'none'
       }}
     >
       <p className={cn('text-xl font-bold', style.text)}>{value}</p>

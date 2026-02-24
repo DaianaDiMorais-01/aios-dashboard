@@ -56,6 +56,12 @@ export const squadColors = {
   design: 'var(--squad-design)',
   creator: 'var(--squad-creator)',
   orchestrator: 'var(--squad-orchestrator)',
+  content: 'var(--squad-content)',
+  development: 'var(--squad-development)',
+  engineering: 'var(--squad-engineering)',
+  analytics: 'var(--squad-analytics)',
+  marketing: 'var(--squad-marketing)',
+  advisory: 'var(--squad-advisory)',
   default: 'var(--squad-default)',
 } as const;
 
@@ -64,5 +70,11 @@ export const squadLabels = {
   design: 'Design',
   creator: 'Creator',
   orchestrator: 'Orchestrator',
+  content: 'Content',
+  development: 'Development',
+  engineering: 'Engineering',
+  analytics: 'Analytics',
+  marketing: 'Marketing',
+  advisory: 'Advisory',
   default: 'Default',
 } as const;

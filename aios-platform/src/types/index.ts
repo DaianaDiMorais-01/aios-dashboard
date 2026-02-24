@@ -1,35 +1,49 @@
-// Squad Types
-export type SquadType = 'copywriting' | 'design' | 'creator' | 'orchestrator' | 'default';
+// Squad Types (expanded 2026-02-24 — matches CSS token palette)
+export type SquadType =
+  | 'copywriting'    // orange
+  | 'design'         // purple
+  | 'creator'        // green
+  | 'orchestrator'   // cyan
+  | 'content'        // red
+  | 'development'    // blue
+  | 'engineering'    // indigo
+  | 'analytics'      // teal
+  | 'marketing'      // pink
+  | 'advisory'       // yellow
+  | 'default';       // gray
 
-// Map squad IDs to SquadTypes for UI styling (updated 2026-02-06)
+// Map squad IDs to SquadTypes for UI styling (updated 2026-02-24)
 export const squadTypeMap: Record<string, SquadType> = {
-  // Marketing & Sales
+  // Marketing & Copy (orange)
   'copywriting': 'copywriting',
-  'media-buy': 'copywriting',
-  'funnel-creator': 'copywriting',
-  'sales': 'copywriting',
-  // Creative & Design
+  // Sales & Funnels (blue)
+  'media-buy': 'development',
+  'funnel-creator': 'development',
+  // Sales (green)
+  'sales': 'creator',
+  // Creative & Design (purple)
   'design-system': 'design',
   'creative-studio': 'design',
-  // Development
-  'full-stack-dev': 'creator',
-  'aios-core-dev': 'creator',
-  // Content & YouTube
-  'content-ecosystem': 'creator',
-  'youtube-lives': 'creator',
-  // Data & Research
-  'data-analytics': 'orchestrator',
-  'deep-scraper': 'orchestrator',
-  // Strategy & Advisory
-  'conselho': 'orchestrator',
-  'infoproduct-creation': 'orchestrator',
-  // System & Orchestration
+  // Engineering (indigo)
+  'full-stack-dev': 'engineering',
+  'aios-core-dev': 'engineering',
+  // Content & YouTube (red)
+  'content-ecosystem': 'content',
+  'youtube-lives': 'content',
+  // Data & Research (teal)
+  'data-analytics': 'analytics',
+  // Scraping & Outreach (pink)
+  'deep-scraper': 'marketing',
+  // Strategy & Advisory (yellow)
+  'conselho': 'advisory',
+  'infoproduct-creation': 'advisory',
+  // System & Orchestration (cyan)
   'project-management-clickup': 'orchestrator',
   'orquestrador-global': 'orchestrator',
   'squad-creator': 'orchestrator',
   'operations-hub': 'orchestrator',
   'docs': 'orchestrator',
-  // Natalia Tanaka (active squads only)
+  // Natalia Tanaka (orange)
   'communication-natalia-tanaka': 'copywriting',
   'community-natalia-tanaka': 'copywriting',
   'strategy-natalia-tanaka': 'copywriting',
@@ -38,13 +52,17 @@ export const squadTypeMap: Record<string, SquadType> = {
 // Pattern-based squad type mapping (for sub-squads and new squads)
 const squadTypePatterns: Array<{ pattern: RegExp; type: SquadType }> = [
   { pattern: /natalia-tanaka/i, type: 'copywriting' },
-  { pattern: /youtube/i, type: 'creator' },
-  { pattern: /copywriting|media-buy|funnel|copy/i, type: 'copywriting' },
+  { pattern: /youtube/i, type: 'content' },
+  { pattern: /copywriting|copy/i, type: 'copywriting' },
+  { pattern: /media-buy|funnel/i, type: 'development' },
   { pattern: /design|ui|ux|creative|studio/i, type: 'design' },
-  { pattern: /dev|full-stack|frontend|backend|aios-core/i, type: 'creator' },
-  { pattern: /data|analytics|scraper|deep-/i, type: 'orchestrator' },
-  { pattern: /orquestrador|orchestrator|system|conselho|advisor|project-management/i, type: 'orchestrator' },
-  { pattern: /comercial|sales|vendas/i, type: 'copywriting' },
+  { pattern: /dev|full-stack|frontend|backend|aios-core/i, type: 'engineering' },
+  { pattern: /content|ecosystem/i, type: 'content' },
+  { pattern: /data|analytics/i, type: 'analytics' },
+  { pattern: /scraper|deep-/i, type: 'marketing' },
+  { pattern: /conselho|advisor|infoproduct/i, type: 'advisory' },
+  { pattern: /orquestrador|orchestrator|system|project-management/i, type: 'orchestrator' },
+  { pattern: /comercial|sales|vendas/i, type: 'creator' },
   { pattern: /community|comunidade/i, type: 'orchestrator' },
   { pattern: /communication|comunicacao/i, type: 'copywriting' },
 ];
