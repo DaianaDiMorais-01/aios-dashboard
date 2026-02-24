@@ -10,7 +10,7 @@ import {
   GitBranch,
   User,
 } from 'lucide-react';
-import { GlassCard, GlassButton, Badge, EmptyState } from '../ui';
+import { GlassCard, GlassButton, Badge, EmptyState, SectionLabel } from '../ui';
 import { ICON_SIZES } from '../../lib/icons';
 import { formatRelativeTime, cn } from '../../lib/utils';
 
@@ -245,7 +245,7 @@ export default function GitHubView() {
   );
 }
 
-// Commits Tab
+// ─── Commits Tab ────────────────────────────────────────────
 function CommitsTab({
   commits,
   loading,
@@ -274,49 +274,51 @@ function CommitsTab({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="space-y-3 pb-6"
+      className="pb-6"
     >
-      {commits.map((commit, index) => (
-        <motion.div
-          key={commit.sha}
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: index * 0.03 }}
-        >
-          <GlassCard
-            variant="subtle"
-            className="hover:bg-white/10 transition-colors cursor-pointer"
-            onClick={() => window.open(commit.url, '_blank')}
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-primary font-medium truncate">{commit.message}</p>
-                  {commit.refs?.length > 0 && commit.refs.map((ref) => (
-                    <RefBadge key={ref} refName={ref} />
-                  ))}
-                </div>
-                <div className="flex items-center gap-3 mt-2 text-xs text-tertiary">
-                  <span className="font-mono glass-subtle px-2 py-0.5 rounded text-secondary">
-                    {commit.sha}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <User size={12} />
-                    {commit.author}
-                  </span>
-                  <span>{formatRelativeTime(commit.date)}</span>
+      <GlassCard padding="md">
+        <SectionLabel count={commits.length}>Commits</SectionLabel>
+        <div className="space-y-1">
+          {commits.map((commit, index) => (
+            <motion.div
+              key={commit.sha}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.02 }}
+              onClick={() => window.open(commit.url, '_blank')}
+              className="flex items-start justify-between gap-3 glass-subtle rounded-xl p-3 hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              <div className="flex items-start gap-2.5 min-w-0">
+                <GitCommit size={16} className="text-blue-400 flex-shrink-0 mt-0.5" />
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-mono text-xs text-tertiary">{commit.sha}</span>
+                    <span className="text-sm font-medium text-primary truncate">
+                      {commit.message}
+                    </span>
+                    {commit.refs?.length > 0 &&
+                      commit.refs.map((ref) => <RefBadge key={ref} refName={ref} />)}
+                  </div>
+                  <div className="flex items-center gap-3 mt-1 text-xs text-tertiary">
+                    <span className="flex items-center gap-1">
+                      <User size={11} />
+                      {commit.author}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <ExternalLink size={14} className="text-tertiary flex-shrink-0 mt-1" />
-            </div>
-          </GlassCard>
-        </motion.div>
-      ))}
+              <span className="text-xs text-tertiary flex-shrink-0 whitespace-nowrap">
+                {formatRelativeTime(commit.date)}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+      </GlassCard>
     </motion.div>
   );
 }
 
-// Pull Requests Tab
+// ─── Pull Requests Tab ──────────────────────────────────────
 function PullsTab({
   pulls,
   loading,
@@ -345,51 +347,52 @@ function PullsTab({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="space-y-3 pb-6"
+      className="pb-6"
     >
-      {pulls.map((pr, index) => (
-        <motion.div
-          key={pr.number}
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: index * 0.03 }}
-        >
-          <GlassCard
-            variant="subtle"
-            className="hover:bg-white/10 transition-colors cursor-pointer"
-            onClick={() => window.open(pr.url, '_blank')}
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-tertiary font-mono text-sm">#{pr.number}</span>
-                  <PrStateBadge state={pr.state} />
-                </div>
-                <p className="text-primary font-medium truncate">{pr.title}</p>
-                <div className="flex items-center gap-3 mt-2 text-xs text-tertiary">
-                  <span className="flex items-center gap-1">
-                    <GitBranch size={12} />
-                    <span className="font-mono glass-subtle px-2 py-0.5 rounded text-secondary">
-                      {pr.headRefName}
+      <GlassCard padding="md">
+        <SectionLabel count={pulls.length}>Pull Requests</SectionLabel>
+        <div className="space-y-1">
+          {pulls.map((pr, index) => (
+            <motion.div
+              key={pr.number}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.02 }}
+              onClick={() => window.open(pr.url, '_blank')}
+              className="flex items-start justify-between gap-3 glass-subtle rounded-xl p-3 hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              <div className="flex items-start gap-2.5 min-w-0">
+                <GitPullRequest size={16} className="text-green-400 flex-shrink-0 mt-0.5" />
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs text-tertiary font-mono">#{pr.number}</span>
+                    <span className="text-sm font-medium text-primary truncate">{pr.title}</span>
+                    <PrStateBadge state={pr.state} />
+                  </div>
+                  <div className="flex items-center gap-3 mt-1 text-xs text-tertiary">
+                    <span className="flex items-center gap-1">
+                      <User size={11} />
+                      {pr.author.login}
                     </span>
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <User size={12} />
-                    {pr.author.login}
-                  </span>
-                  <span>{formatRelativeTime(pr.createdAt)}</span>
+                    <span className="flex items-center gap-1">
+                      <GitBranch size={10} />
+                      <span className="font-mono">{pr.headRefName}</span>
+                    </span>
+                  </div>
                 </div>
               </div>
-              <ExternalLink size={14} className="text-tertiary flex-shrink-0 mt-1" />
-            </div>
-          </GlassCard>
-        </motion.div>
-      ))}
+              <span className="text-xs text-tertiary flex-shrink-0 whitespace-nowrap">
+                {formatRelativeTime(pr.createdAt)}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+      </GlassCard>
     </motion.div>
   );
 }
 
-// Issues Tab
+// ─── Issues Tab ─────────────────────────────────────────────
 function IssuesTab({
   issues,
   loading,
@@ -418,71 +421,66 @@ function IssuesTab({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="space-y-3 pb-6"
+      className="pb-6"
     >
-      {issues.map((issue, index) => (
-        <motion.div
-          key={issue.number}
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: index * 0.03 }}
-        >
-          <GlassCard
-            variant="subtle"
-            className="hover:bg-white/10 transition-colors cursor-pointer"
-            onClick={() => window.open(issue.url, '_blank')}
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-tertiary font-mono text-sm">#{issue.number}</span>
-                  <IssueStateBadge state={issue.state} />
-                </div>
-                <p className="text-primary font-medium truncate">{issue.title}</p>
-                <div className="flex items-center gap-3 mt-2 text-xs text-tertiary flex-wrap">
-                  <span className="flex items-center gap-1">
-                    <User size={12} />
-                    {issue.author.login}
-                  </span>
-                  <span>{formatRelativeTime(issue.createdAt)}</span>
-                  {issue.labels.length > 0 && (
-                    <div className="flex gap-1 flex-wrap">
-                      {issue.labels.map((label) => (
-                        <span
-                          key={label.name}
-                          className="px-2 py-0.5 rounded-full text-[10px] font-medium"
-                          style={{
-                            backgroundColor: `#${label.color}22`,
-                            color: `#${label.color}`,
-                            border: `1px solid #${label.color}44`,
-                          }}
-                        >
-                          {label.name}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+      <GlassCard padding="md">
+        <SectionLabel count={issues.length}>Issues</SectionLabel>
+        <div className="space-y-1">
+          {issues.map((issue, index) => (
+            <motion.div
+              key={issue.number}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.02 }}
+              onClick={() => window.open(issue.url, '_blank')}
+              className="flex items-start justify-between gap-3 glass-subtle rounded-xl p-3 hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              <div className="flex items-start gap-2.5 min-w-0">
+                <CircleDot size={16} className="text-green-400 flex-shrink-0 mt-0.5" />
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs text-tertiary font-mono">#{issue.number}</span>
+                    <span className="text-sm font-medium text-primary truncate">{issue.title}</span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                    {issue.labels.slice(0, 3).map((label) => (
+                      <span
+                        key={label.name}
+                        className="text-[10px] px-2 py-0.5 rounded-full font-medium"
+                        style={{
+                          backgroundColor: `#${label.color}20`,
+                          color: `#${label.color}`,
+                        }}
+                      >
+                        {label.name}
+                      </span>
+                    ))}
+                    <span className="text-xs text-tertiary flex items-center gap-1">
+                      <User size={11} />
+                      {issue.author.login}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <ExternalLink size={14} className="text-tertiary flex-shrink-0 mt-1" />
-            </div>
-          </GlassCard>
-        </motion.div>
-      ))}
+              <span className="text-xs text-tertiary flex-shrink-0 whitespace-nowrap">
+                {formatRelativeTime(issue.createdAt)}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+      </GlassCard>
     </motion.div>
   );
 }
 
-// Helpers
+// ─── Helpers ────────────────────────────────────────────────
 function RefBadge({ refName }: { refName: string }) {
   const isHead = refName.startsWith('HEAD');
   const isTag = refName.startsWith('tag: ');
   const isOrigin = refName.startsWith('origin/');
 
-  // Clean up display name
   let displayName = refName;
   if (isHead) {
-    // "HEAD -> feat/branch" → show "feat/branch"
     const match = refName.match(/HEAD -> (.+)/);
     displayName = match ? match[1] : 'HEAD';
   }
@@ -511,12 +509,6 @@ function PrStateBadge({ state }: { state: string }) {
   const s = state.toLowerCase();
   if (s === 'open') return <Badge variant="status" status="success" size="sm">Open</Badge>;
   if (s === 'merged') return <Badge variant="status" status="online" size="sm">Merged</Badge>;
-  return <Badge variant="status" status="offline" size="sm">Closed</Badge>;
-}
-
-function IssueStateBadge({ state }: { state: string }) {
-  const s = state.toLowerCase();
-  if (s === 'open') return <Badge variant="status" status="success" size="sm">Open</Badge>;
   return <Badge variant="status" status="offline" size="sm">Closed</Badge>;
 }
 
