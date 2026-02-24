@@ -235,7 +235,7 @@ export function AgentInteractionPanel({
                             : 'text-secondary',
                         )}
                         style={
-                          msg.role === 'assistant'
+                          msg.role === 'agent'
                             ? { background: `${domainCfg.tileColor}11` }
                             : undefined
                         }

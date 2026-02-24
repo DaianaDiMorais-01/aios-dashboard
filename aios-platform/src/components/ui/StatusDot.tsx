@@ -12,20 +12,20 @@ interface StatusDotProps {
 }
 
 const statusColors: Record<StatusType, string> = {
-  idle: 'bg-gray-400',
-  working: 'bg-green-500',
-  waiting: 'bg-yellow-500',
-  error: 'bg-red-500',
-  success: 'bg-green-500',
-  offline: 'bg-gray-500',
+  idle: 'bg-[var(--status-dot-idle)]',
+  working: 'bg-[var(--status-dot-working)]',
+  waiting: 'bg-[var(--status-dot-waiting)]',
+  error: 'bg-[var(--status-dot-error)]',
+  success: 'bg-[var(--status-dot-success)]',
+  offline: 'bg-[var(--status-dot-offline)]',
 };
 
 const glowColors: Record<StatusType, string> = {
   idle: '',
-  working: 'shadow-[0_0_8px_rgba(34,197,94,0.6)]',
-  waiting: 'shadow-[0_0_8px_rgba(234,179,8,0.6)]',
-  error: 'shadow-[0_0_8px_rgba(239,68,68,0.6)]',
-  success: 'shadow-[0_0_8px_rgba(34,197,94,0.6)]',
+  working: 'shadow-[0_0_8px_var(--status-dot-working-glow)]',
+  waiting: 'shadow-[0_0_8px_var(--status-dot-waiting-glow)]',
+  error: 'shadow-[0_0_8px_var(--status-dot-error-glow)]',
+  success: 'shadow-[0_0_8px_var(--status-dot-success-glow)]',
   offline: '',
 };
 

@@ -92,7 +92,7 @@ function buildObstacleGrid(domain: DomainId): boolean[][] {
   furniture.forEach((f) => {
     if (f.type === 'rug' || f.type === 'lamp') return;
     // Furniture occupies ~1-2 tiles depending on size
-    const tileSpanX = f.type === 'meetingTable' || f.type === 'projectorScreen' || f.type === 'rug' ? 2 : 1;
+    const tileSpanX = f.type === 'meetingTable' || f.type === 'projectorScreen' ? 2 : 1;
     const tileSpanY = f.type === 'bookshelf' || f.type === 'serverRack' || f.type === 'cabinet' ? 2 : 1;
     for (let dy = 0; dy < tileSpanY; dy++) {
       for (let dx = 0; dx < tileSpanX; dx++) {

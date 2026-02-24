@@ -19,19 +19,19 @@ const sizeClasses = {
 };
 
 const variantColors = {
-  default: 'bg-blue-500',
-  success: 'bg-green-500',
-  warning: 'bg-yellow-500',
-  error: 'bg-red-500',
-  info: 'bg-cyan-500',
+  default: 'bg-[var(--progress-default)]',
+  success: 'bg-[var(--progress-success)]',
+  warning: 'bg-[var(--progress-warning)]',
+  error: 'bg-[var(--progress-error)]',
+  info: 'bg-[var(--progress-info)]',
 };
 
 const glowShadows = {
-  default: 'shadow-[0_0_8px_rgba(59,130,246,0.5)]',
-  success: 'shadow-[0_0_8px_rgba(34,197,94,0.5)]',
-  warning: 'shadow-[0_0_8px_rgba(234,179,8,0.5)]',
-  error: 'shadow-[0_0_8px_rgba(239,68,68,0.5)]',
-  info: 'shadow-[0_0_8px_rgba(6,182,212,0.5)]',
+  default: 'shadow-[0_0_8px_var(--progress-default-glow)]',
+  success: 'shadow-[0_0_8px_var(--progress-success-glow)]',
+  warning: 'shadow-[0_0_8px_var(--progress-warning-glow)]',
+  error: 'shadow-[0_0_8px_var(--progress-error-glow)]',
+  info: 'shadow-[0_0_8px_var(--progress-info-glow)]',
 };
 
 export function ProgressBar({
@@ -56,7 +56,7 @@ export function ProgressBar({
       )}
       <div
         className={cn(
-          'w-full rounded-full bg-white/10 overflow-hidden',
+          'w-full rounded-full bg-[var(--progress-track)] overflow-hidden',
           sizeClasses[size],
         )}
         role="progressbar"

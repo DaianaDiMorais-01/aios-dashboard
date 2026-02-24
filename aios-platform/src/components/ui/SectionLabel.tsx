@@ -15,7 +15,7 @@ export function SectionLabel({ children, count, action, className }: SectionLabe
           {children}
         </span>
         {count !== undefined && (
-          <span className="inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full bg-white/10 text-[10px] font-medium text-tertiary">
+          <span className="inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded-full bg-[var(--color-background-hover)] text-[10px] font-medium text-tertiary">
             {count}
           </span>
         )}

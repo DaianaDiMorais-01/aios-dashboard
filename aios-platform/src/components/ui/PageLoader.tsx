@@ -17,14 +17,14 @@ export function PageLoader({ message = 'Carregando...' }: PageLoaderProps) {
         <div className="relative h-16 w-16">
           {/* Outer ring */}
           <motion.div
-            className="absolute inset-0 rounded-full border-2 border-blue-500/20"
+            className="absolute inset-0 rounded-full border-2 border-[var(--loader-ring)]"
             animate={{ rotate: 360 }}
             transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
           />
 
           {/* Inner spinning arc */}
           <motion.div
-            className="absolute inset-0 rounded-full border-2 border-transparent border-t-blue-500"
+            className="absolute inset-0 rounded-full border-2 border-transparent border-t-[var(--loader-arc)]"
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
           />
@@ -35,7 +35,7 @@ export function PageLoader({ message = 'Carregando...' }: PageLoaderProps) {
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
-            <div className="h-3 w-3 rounded-full bg-gradient-to-br from-blue-500 to-purple-500" />
+            <div className="h-3 w-3 rounded-full" style={{ background: 'linear-gradient(to bottom right, var(--loader-dot-from), var(--loader-dot-to))' }} />
           </motion.div>
         </div>
 
@@ -63,7 +63,7 @@ export function InlineLoader({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
 
   return (
     <motion.div
-      className={`${sizes[size]} rounded-full border-2 border-transparent border-t-blue-500`}
+      className={`${sizes[size]} rounded-full border-2 border-transparent border-t-[var(--loader-arc)]`}
       animate={{ rotate: 360 }}
       transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
     />

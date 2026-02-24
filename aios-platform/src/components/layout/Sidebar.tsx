@@ -26,7 +26,7 @@ import { cn } from '../../lib/utils';
 // Logo components
 const Logo = () => (
   <div className="flex items-center gap-3">
-    <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
+    <div className="h-10 w-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'var(--sidebar-logo-gradient)' }}>
       <span className="text-white font-bold text-lg">A</span>
     </div>
     <div className="flex flex-col">
@@ -37,7 +37,7 @@ const Logo = () => (
 );
 
 const LogoSmall = () => (
-  <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg mx-auto">
+  <div className="h-10 w-10 rounded-xl flex items-center justify-center shadow-lg mx-auto" style={{ background: 'var(--sidebar-logo-gradient)' }}>
     <span className="text-white font-bold text-lg">A</span>
   </div>
 );
@@ -85,26 +85,35 @@ function ViewNavigation({ collapsed = false }: { collapsed?: boolean }) {
                 'w-full flex items-center gap-3 rounded-xl transition-all text-left group',
                 collapsed ? 'justify-center p-2.5' : 'px-3 py-2',
                 isActive
-                  ? 'glass-card border border-blue-500/30 bg-blue-500/10 text-primary'
+                  ? 'glass-card border text-primary'
                   : 'text-secondary hover:text-primary hover:bg-white/5'
               )}
+              style={isActive ? {
+                backgroundColor: 'var(--sidebar-active-bg)',
+                borderColor: 'var(--sidebar-active-border)',
+              } : undefined}
             >
               <Icon
                 size={18}
                 className={cn(
                   'flex-shrink-0 transition-colors',
-                  isActive ? 'text-blue-500' : 'text-tertiary group-hover:text-secondary'
+                  !isActive && 'text-tertiary group-hover:text-secondary'
                 )}
+                style={isActive ? { color: 'var(--sidebar-active-text)' } : undefined}
               />
               {!collapsed && (
                 <>
                   <span className="flex-1 text-sm font-medium truncate">{item.label}</span>
-                  <kbd className={cn(
-                    'hidden lg:inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded text-[10px] font-mono',
-                    isActive
-                      ? 'bg-blue-500/20 text-blue-400'
-                      : 'bg-white/5 text-tertiary'
-                  )}>
+                  <kbd
+                    className={cn(
+                      'hidden lg:inline-flex items-center justify-center h-5 min-w-[20px] px-1.5 rounded text-[10px] font-mono',
+                      !isActive && 'bg-white/5 text-tertiary'
+                    )}
+                    style={isActive ? {
+                      backgroundColor: 'var(--sidebar-active-kbd-bg)',
+                      color: 'var(--sidebar-active-kbd-text)',
+                    } : undefined}
+                  >
                     {item.shortcut}
                   </kbd>
                 </>

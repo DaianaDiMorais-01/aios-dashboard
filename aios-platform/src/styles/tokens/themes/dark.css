@@ -1,0 +1,41 @@
+/* Dark Mode Overrides */
+.dark {
+  /* --- Background --- */
+  --color-background-primary: rgba(30, 30, 30, 0.65);
+  --color-background-secondary: rgba(25, 25, 25, 0.55);
+  --color-background-tertiary: rgba(40, 40, 40, 0.45);
+  --color-background-base: #0f0f0f;
+  --color-background-hover: rgba(255, 255, 255, 0.06);
+  --color-background-active: rgba(255, 255, 255, 0.08);
+  --color-background-disabled: rgba(255, 255, 255, 0.04);
+
+  /* --- Text --- */
+  --color-text-primary: rgba(255, 255, 255, 0.92);
+  --color-text-secondary: rgba(255, 255, 255, 0.65);
+  --color-text-tertiary: rgba(255, 255, 255, 0.4);
+  --color-text-disabled: rgba(255, 255, 255, 0.2);
+  --color-text-inverse: #000000;
+
+  /* --- Borders --- */
+  --color-border-default: rgba(255, 255, 255, 0.1);
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-border-strong: rgba(255, 255, 255, 0.2);
+  --color-border-focus: rgba(0, 122, 255, 0.6);
+
+  /* --- Glass --- */
+  --glass-border-color: rgba(255, 255, 255, 0.1);
+  --glass-border-color-subtle: rgba(255, 255, 255, 0.06);
+  --glass-background-panel: rgba(20, 20, 20, 0.8);
+  --glass-background-panel-hover: rgba(30, 30, 30, 0.85);
+  --glass-background-card: rgba(25, 25, 25, 0.7);
+  --glass-background-card-active: linear-gradient(135deg, rgba(0, 122, 255, 0.12) 0%, rgba(0, 122, 255, 0.06) 100%);
+  --glass-background-input: rgba(15, 15, 15, 0.85);
+  --glass-background-button: rgba(40, 40, 40, 0.6);
+  --glass-background-button-primary: linear-gradient(135deg, #007aff, #0055cc);
+  --glass-background-button-primary-hover: linear-gradient(135deg, #1a8aff, #0066dd);
+
+  /* --- Shadows --- */
+  --glass-shadow-default: 0 0 0 1px rgba(255, 255, 255, 0.04) inset, 0 4px 16px rgba(0, 0, 0, 0.3);
+  --glass-shadow-large: 0 0 0 1px rgba(255, 255, 255, 0.04) inset, 0 8px 32px rgba(0, 0, 0, 0.4);
+  --glass-shadow-hover: 0 0 0 1px rgba(255, 255, 255, 0.06) inset, 0 12px 40px rgba(0, 0, 0, 0.5);
+}

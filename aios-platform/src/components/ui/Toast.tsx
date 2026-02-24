@@ -50,24 +50,24 @@ const iconMap: Record<ToastType, React.FC> = {
 
 const styleMap: Record<ToastType, { bg: string; border: string; icon: string }> = {
   success: {
-    bg: 'bg-green-500/10',
-    border: 'border-green-500/30',
-    icon: 'text-green-500',
+    bg: 'bg-[var(--toast-success-bg)]',
+    border: 'border-[var(--toast-success-border)]',
+    icon: 'text-[var(--toast-success-text)]',
   },
   error: {
-    bg: 'bg-red-500/10',
-    border: 'border-red-500/30',
-    icon: 'text-red-500',
+    bg: 'bg-[var(--toast-error-bg)]',
+    border: 'border-[var(--toast-error-border)]',
+    icon: 'text-[var(--toast-error-text)]',
   },
   warning: {
-    bg: 'bg-yellow-500/10',
-    border: 'border-yellow-500/30',
-    icon: 'text-yellow-500',
+    bg: 'bg-[var(--toast-warning-bg)]',
+    border: 'border-[var(--toast-warning-border)]',
+    icon: 'text-[var(--toast-warning-text)]',
   },
   info: {
-    bg: 'bg-blue-500/10',
-    border: 'border-blue-500/30',
-    icon: 'text-blue-500',
+    bg: 'bg-[var(--toast-info-bg)]',
+    border: 'border-[var(--toast-info-border)]',
+    icon: 'text-[var(--toast-info-text)]',
   },
 };
 

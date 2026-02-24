@@ -57,7 +57,7 @@ describe('Badge', () => {
     render(<Badge variant="count">5</Badge>);
 
     const badge = screen.getByText('5');
-    expect(badge).toHaveClass('bg-blue-500', 'text-white', 'rounded-full');
+    expect(badge).toHaveClass('bg-[var(--badge-count-bg)]', 'text-[var(--badge-count-text)]', 'rounded-full');
   });
 
   it('should apply size classes', () => {

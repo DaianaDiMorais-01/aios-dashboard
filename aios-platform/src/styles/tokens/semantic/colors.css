@@ -1,0 +1,97 @@
+/* Semantic Color Tokens — intent-based mapping */
+:root {
+  /* --- Background --- */
+  --color-background-primary: rgba(255, 255, 255, 0.65);
+  --color-background-secondary: rgba(255, 255, 255, 0.55);
+  --color-background-tertiary: rgba(255, 255, 255, 0.45);
+  --color-background-base: #f5f0eb;
+  --color-background-hover: rgba(0, 0, 0, 0.04);
+  --color-background-active: rgba(0, 0, 0, 0.06);
+  --color-background-disabled: rgba(0, 0, 0, 0.03);
+
+  /* --- Text --- */
+  --color-text-primary: rgba(0, 0, 0, 0.88);
+  --color-text-secondary: rgba(0, 0, 0, 0.65);
+  --color-text-tertiary: rgba(0, 0, 0, 0.45);
+  --color-text-disabled: rgba(0, 0, 0, 0.25);
+  --color-text-inverse: #ffffff;
+
+  /* --- Borders --- */
+  --color-border-default: rgba(0, 0, 0, 0.08);
+  --color-border-subtle: rgba(0, 0, 0, 0.05);
+  --color-border-strong: rgba(0, 0, 0, 0.15);
+  --color-border-focus: rgba(0, 122, 255, 0.5);
+
+  /* --- Status --- */
+  --color-status-success: #22c55e;
+  --color-status-warning: #eab308;
+  --color-status-error: #ef4444;
+  --color-status-info: #3b82f6;
+
+  /* --- Accent / Selection --- */
+  --color-accent: #007aff;
+  --color-accent-subtle: rgba(0, 122, 255, 0.15);
+  --color-selection-bg: rgba(0, 122, 255, 0.3);
+  --color-selection-text: inherit;
+
+  /* --- Squads --- */
+  --squad-copywriting-default: #f97316;
+  --squad-copywriting-gradient: linear-gradient(90deg, #f97316, #f59e0b);
+  --squad-design-default: #a855f7;
+  --squad-design-gradient: linear-gradient(90deg, #a855f7, #8b5cf6);
+  --squad-creator-default: #22c55e;
+  --squad-creator-gradient: linear-gradient(90deg, #22c55e, #16a34a);
+  --squad-orchestrator-default: #06b6d4;
+  --squad-orchestrator-gradient: linear-gradient(90deg, #06b6d4, #0891b2);
+  --squad-development-default: #3b82f6;
+  --squad-development-gradient: linear-gradient(90deg, #3b82f6, #2563eb);
+  --squad-marketing-default: #ec4899;
+  --squad-marketing-gradient: linear-gradient(90deg, #ec4899, #db2777);
+  --squad-default-default: #9ca3af;
+  --squad-default-gradient: linear-gradient(90deg, #9ca3af, #6b7280);
+
+  /* --- Dashboard status (with bg) --- */
+  --status-success: #22c55e;
+  --status-error: #ef4444;
+  --status-warning: #eab308;
+  --status-info: #3b82f6;
+  --status-idle: #9ca3af;
+  --status-success-bg: rgba(34, 197, 94, 0.1);
+  --status-error-bg: rgba(239, 68, 68, 0.1);
+  --status-warning-bg: rgba(234, 179, 8, 0.1);
+  --status-info-bg: rgba(59, 130, 246, 0.1);
+  --status-idle-bg: rgba(156, 163, 175, 0.1);
+
+  /* --- Agent colors --- */
+  --agent-dev: #22c55e;
+  --agent-qa: #a855f7;
+  --agent-architect: #3b82f6;
+  --agent-pm: #f97316;
+  --agent-po: #ec4899;
+  --agent-analyst: #06b6d4;
+  --agent-devops: #eab308;
+
+  /* --- Phase colors --- */
+  --phase-planning: #3b82f6;
+  --phase-coding: #22c55e;
+  --phase-testing: #a855f7;
+  --phase-reviewing: #f97316;
+  --phase-deploying: #eab308;
+
+  /* --- Complexity --- */
+  --complexity-simple: #22c55e;
+  --complexity-standard: #3b82f6;
+  --complexity-complex: #f97316;
+
+  /* --- Category --- */
+  --category-feature: #3b82f6;
+  --category-fix: #ef4444;
+  --category-refactor: #a855f7;
+  --category-docs: #06b6d4;
+
+  /* --- Priority (MoSCoW) --- */
+  --priority-must: #ef4444;
+  --priority-should: #eab308;
+  --priority-could: #3b82f6;
+  --priority-wont: #6b7280;
+}

@@ -47,7 +47,7 @@ export function Badge({
     default: 'glass-badge',
     squad: cn('glass-badge', squadStyles[squadType]),
     status: cn('glass-badge', status ? statusStyles[status] : ''),
-    count: 'bg-blue-500 text-white min-w-[20px] px-1.5 py-0.5 rounded-full text-[10px]',
+    count: 'bg-[var(--badge-count-bg)] text-[var(--badge-count-text)] min-w-[20px] px-1.5 py-0.5 rounded-full text-[10px]',
   };
 
   return (

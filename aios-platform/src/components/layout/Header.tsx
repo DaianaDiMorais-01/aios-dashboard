@@ -172,7 +172,11 @@ export function Header() {
           <GlassButton
             variant="ghost"
             size="icon"
-            className={cn('relative', showNotifications && 'bg-blue-500/10 text-blue-500')}
+            className="relative"
+            style={showNotifications ? {
+              backgroundColor: 'var(--sidebar-active-bg)',
+              color: 'var(--sidebar-active-text)',
+            } : undefined}
             onClick={() => setShowNotifications(!showNotifications)}
           >
             <BellIcon />

@@ -1,3 +1,4 @@
+/// <reference types="vitest-axe/extend-expect" />
 /**
  * Accessibility Tests using vitest-axe
  * These tests validate WCAG 2.1 AA compliance for UI components
@@ -136,7 +137,7 @@ describe('Accessibility Tests', () => {
 
     it('should have no violations with status variant', async () => {
       const { container } = render(
-        <Badge variant="success">Success</Badge>
+        <Badge variant="status" status="success">Success</Badge>
       );
       const results = await axe(container);
       expect(results).toHaveNoViolations();

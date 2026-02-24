@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# AIOS squads and AI agent configs (local only)
+.squads-design/
+.codex/
+.claude/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

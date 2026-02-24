@@ -60,64 +60,7 @@ textarea {
   font: inherit;
 }
 
-/* ============================================
-   DASHBOARD DESIGN TOKENS
-   ============================================ */
-
-:root {
-  /* Selection */
-  --color-selection-bg: rgba(0, 122, 255, 0.3);
-  --color-selection-text: inherit;
-
-  /* Accent / interactive color (used for toggles, active states, focus rings) */
-  --color-accent: #007aff;
-  --color-accent-subtle: rgba(0, 122, 255, 0.15);
-
-  /* Status colors */
-  --status-success: #22c55e;
-  --status-error: #ef4444;
-  --status-warning: #eab308;
-  --status-info: #3b82f6;
-  --status-idle: #9ca3af;
-  --status-success-bg: rgba(34, 197, 94, 0.1);
-  --status-error-bg: rgba(239, 68, 68, 0.1);
-  --status-warning-bg: rgba(234, 179, 8, 0.1);
-  --status-info-bg: rgba(59, 130, 246, 0.1);
-  --status-idle-bg: rgba(156, 163, 175, 0.1);
-
-  /* Agent colors */
-  --agent-dev: #22c55e;
-  --agent-qa: #a855f7;
-  --agent-architect: #3b82f6;
-  --agent-pm: #f97316;
-  --agent-po: #ec4899;
-  --agent-analyst: #06b6d4;
-  --agent-devops: #eab308;
-
-  /* Phase colors */
-  --phase-planning: #3b82f6;
-  --phase-coding: #22c55e;
-  --phase-testing: #a855f7;
-  --phase-reviewing: #f97316;
-  --phase-deploying: #eab308;
-
-  /* Complexity colors */
-  --complexity-simple: #22c55e;
-  --complexity-standard: #3b82f6;
-  --complexity-complex: #f97316;
-
-  /* Category colors */
-  --category-feature: #3b82f6;
-  --category-fix: #ef4444;
-  --category-refactor: #a855f7;
-  --category-docs: #06b6d4;
-
-  /* Priority colors (MoSCoW) */
-  --priority-must: #ef4444;
-  --priority-should: #eab308;
-  --priority-could: #3b82f6;
-  --priority-wont: #6b7280;
-}
+/* Tokens are now in src/styles/tokens/semantic/colors.css */
 
 /* ============================================
    UTILITY CLASSES

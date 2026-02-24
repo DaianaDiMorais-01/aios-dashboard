@@ -20,8 +20,8 @@ const sizeClasses = {
 const variantClasses = {
   default: 'glass-button',
   primary: 'glass-button-primary',
-  ghost: 'bg-transparent hover:bg-black/5 dark:hover:bg-white/5 border-transparent',
-  danger: 'glass-button bg-red-500/10 text-red-500 hover:bg-red-500/20 border-red-500/20',
+  ghost: 'bg-transparent border-transparent',
+  danger: 'glass-button',
 };
 
 export const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
@@ -35,11 +35,23 @@ export const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
       rightIcon,
       disabled,
       children,
+      style,
       ...props
     },
     ref
   ) => {
     const isDisabled = disabled || loading;
+
+    const variantStyles: React.CSSProperties | undefined =
+      variant === 'danger'
+        ? {
+            backgroundColor: 'var(--button-danger-bg)',
+            color: 'var(--button-danger-text)',
+            borderColor: 'var(--button-danger-border)',
+          }
+        : variant === 'ghost'
+          ? { ['--tw-ring-color' as string]: 'var(--button-focus-ring)' }
+          : undefined;
 
     return (
       <motion.button
@@ -47,12 +59,14 @@ export const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
         className={cn(
           'inline-flex items-center justify-center font-medium rounded-xl',
           'transition-all duration-150 ease-out',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
+          'focus:outline-none focus-visible:ring-2',
           'disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
           sizeClasses[size],
           variantClasses[variant],
+          variant === 'ghost' && 'hover:bg-[var(--button-ghost-hover)]',
           className
         )}
+        style={{ ...variantStyles, ...style, ['--tw-ring-color' as string]: 'var(--button-focus-ring)' }}
         disabled={isDisabled}
         whileHover={!isDisabled ? { scale: 1.02 } : undefined}
         whileTap={!isDisabled ? { scale: 0.98 } : undefined}

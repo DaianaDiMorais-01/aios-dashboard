@@ -47,15 +47,15 @@ export const GlassInput = forwardRef<HTMLInputElement, GlassInputProps>(
         {label && (
           <label htmlFor={inputId} className="text-sm font-medium text-secondary">
             {label}
-            {props.required && <span className="text-red-500 ml-0.5">*</span>}
+            {props.required && <span className="text-[var(--input-required-text)] ml-0.5">*</span>}
           </label>
         )}
         <div
           className={cn(
             'relative flex items-center rounded-xl transition-all duration-150',
-            isFocused && !error && 'ring-2 ring-blue-500/30',
-            error && 'ring-2 ring-red-500/30',
-            success && !error && 'ring-2 ring-green-500/30'
+            isFocused && !error && 'ring-2 ring-[var(--input-focus-ring)]',
+            error && 'ring-2 ring-[var(--input-error-ring)]',
+            success && !error && 'ring-2 ring-[var(--input-success-ring)]'
           )}
         >
           {leftIcon && (
@@ -70,8 +70,8 @@ export const GlassInput = forwardRef<HTMLInputElement, GlassInputProps>(
               'glass-input w-full h-11 px-4 rounded-xl',
               leftIcon && 'pl-10',
               (rightIcon || error || success) && 'pr-10',
-              error && 'border-red-500/50 focus:border-red-500',
-              success && !error && 'border-green-500/50 focus:border-green-500',
+              error && 'border-[var(--input-error-border)] focus:border-[var(--input-error-border-focus)]',
+              success && !error && 'border-[var(--input-success-border)] focus:border-[var(--input-success-border-focus)]',
               className
             )}
             onFocus={(e) => {
@@ -95,12 +95,12 @@ export const GlassInput = forwardRef<HTMLInputElement, GlassInputProps>(
           {/* Status icons */}
           <span className="absolute right-3 flex items-center gap-1">
             {error && (
-              <span className="text-red-500" aria-hidden="true">
+              <span className="text-[var(--input-error-text)]" aria-hidden="true">
                 <ErrorIcon />
               </span>
             )}
             {success && !error && (
-              <span className="text-green-500" aria-hidden="true">
+              <span className="text-[var(--input-success-text)]" aria-hidden="true">
                 <SuccessIcon />
               </span>
             )}
@@ -121,7 +121,7 @@ export const GlassInput = forwardRef<HTMLInputElement, GlassInputProps>(
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.15 }}
-              className="text-xs text-red-500 flex items-center gap-1"
+              className="text-xs text-[var(--input-error-text)] flex items-center gap-1"
               role="alert"
             >
               {error}
@@ -140,7 +140,7 @@ export const GlassInput = forwardRef<HTMLInputElement, GlassInputProps>(
         {showCharacterCount && maxLength && (
           <span className={cn(
             'text-xs text-right',
-            charCount >= maxLength ? 'text-red-500' : 'text-tertiary'
+            charCount >= maxLength ? 'text-[var(--input-error-text)]' : 'text-tertiary'
           )}>
             {charCount}/{maxLength}
           </span>
@@ -179,15 +179,15 @@ export const GlassTextarea = forwardRef<HTMLTextAreaElement, GlassTextareaProps>
         {label && (
           <label htmlFor={textareaId} className="text-sm font-medium text-secondary">
             {label}
-            {props.required && <span className="text-red-500 ml-0.5">*</span>}
+            {props.required && <span className="text-[var(--input-required-text)] ml-0.5">*</span>}
           </label>
         )}
         <div
           className={cn(
             'relative rounded-xl transition-all duration-150',
-            isFocused && !error && 'ring-2 ring-blue-500/30',
-            error && 'ring-2 ring-red-500/30',
-            success && !error && 'ring-2 ring-green-500/30'
+            isFocused && !error && 'ring-2 ring-[var(--input-focus-ring)]',
+            error && 'ring-2 ring-[var(--input-error-ring)]',
+            success && !error && 'ring-2 ring-[var(--input-success-ring)]'
           )}
         >
           <textarea
@@ -196,8 +196,8 @@ export const GlassTextarea = forwardRef<HTMLTextAreaElement, GlassTextareaProps>
             className={cn(
               'glass-input w-full min-h-[100px] px-4 py-3 rounded-xl resize-none',
               'glass-scrollbar',
-              error && 'border-red-500/50 focus:border-red-500',
-              success && !error && 'border-green-500/50 focus:border-green-500',
+              error && 'border-[var(--input-error-border)] focus:border-[var(--input-error-border-focus)]',
+              success && !error && 'border-[var(--input-success-border)] focus:border-[var(--input-success-border-focus)]',
               className
             )}
             onFocus={(e) => {
@@ -228,7 +228,7 @@ export const GlassTextarea = forwardRef<HTMLTextAreaElement, GlassTextareaProps>
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.15 }}
-              className="text-xs text-red-500 flex items-center gap-1"
+              className="text-xs text-[var(--input-error-text)] flex items-center gap-1"
               role="alert"
             >
               {error}
@@ -248,7 +248,7 @@ export const GlassTextarea = forwardRef<HTMLTextAreaElement, GlassTextareaProps>
           {showCharacterCount && maxLength && (
             <span className={cn(
               'text-xs',
-              charCount >= maxLength ? 'text-red-500' : 'text-tertiary'
+              charCount >= maxLength ? 'text-[var(--input-error-text)]' : 'text-tertiary'
             )}>
               {charCount}/{maxLength}
             </span>

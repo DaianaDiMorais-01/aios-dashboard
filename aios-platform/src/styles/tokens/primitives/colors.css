@@ -1,0 +1,23 @@
+/* Primitive Color Palette — raw hex/rgba values */
+:root {
+  --palette-white: #ffffff;
+  --palette-black: #000000;
+  --palette-green-500: #22c55e;
+  --palette-green-600: #16a34a;
+  --palette-yellow-500: #eab308;
+  --palette-red-500: #ef4444;
+  --palette-blue-500: #3b82f6;
+  --palette-blue-600: #2563eb;
+  --palette-blue-700: #0055cc;
+  --palette-blue-800: #007aff;
+  --palette-cyan-500: #06b6d4;
+  --palette-cyan-600: #0891b2;
+  --palette-orange-500: #f97316;
+  --palette-amber-500: #f59e0b;
+  --palette-purple-500: #a855f7;
+  --palette-violet-500: #8b5cf6;
+  --palette-pink-500: #ec4899;
+  --palette-pink-600: #db2777;
+  --palette-gray-400: #9ca3af;
+  --palette-gray-500: #6b7280;
+}

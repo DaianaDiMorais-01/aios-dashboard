@@ -94,7 +94,7 @@ export function ContextMenu({ items, children, className }: ContextMenuProps) {
                     item.disabled
                       ? 'text-tertiary cursor-not-allowed'
                       : item.danger
-                        ? 'text-red-500 hover:bg-red-500/10'
+                        ? 'text-[var(--button-danger-text)] hover:bg-[var(--button-danger-bg)]'
                         : 'text-primary hover:bg-white/5'
                   )}
                   role="menuitem"
