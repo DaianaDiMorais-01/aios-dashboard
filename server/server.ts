@@ -298,6 +298,142 @@ const _server = Bun.serve({
       });
     }
 
+    // API: GitHub auth status
+    if (url.pathname === '/github/status') {
+      try {
+        const proc = Bun.spawnSync(['gh', 'auth', 'status', '--hostname', 'github.com'], {
+          stdout: 'pipe',
+          stderr: 'pipe',
+        });
+        const output = proc.stdout.toString() + proc.stderr.toString();
+        const loggedIn = proc.exitCode === 0;
+        // Extract username from output
+        const userMatch = output.match(/Logged in to github\.com account (\S+)/);
+        return new Response(
+          JSON.stringify({
+            connected: loggedIn,
+            username: userMatch?.[1] || null,
+            message: loggedIn ? 'GitHub connected' : 'GitHub not connected',
+          }),
+          { headers: { ...headers, 'Content-Type': 'application/json' } }
+        );
+      } catch {
+        return new Response(
+          JSON.stringify({ connected: false, username: null, message: 'gh CLI not found' }),
+          { headers: { ...headers, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    // API: GitHub commits
+    if (url.pathname === '/github/commits') {
+      try {
+        const limit = parseInt(url.searchParams.get('limit') || '20');
+        const proc = Bun.spawnSync(
+          [
+            'gh',
+            'api',
+            'repos/SynkraAI/aios-dashboard/commits',
+            '--jq',
+            `.[:${limit}] | [.[] | {sha: .sha[:7], message: (.commit.message | split("\n")[0]), author: (.commit.author.name), date: .commit.author.date, url: .html_url}]`,
+          ],
+          { stdout: 'pipe', stderr: 'pipe' }
+        );
+        if (proc.exitCode !== 0) {
+          const err = proc.stderr.toString();
+          return new Response(JSON.stringify({ error: err }), {
+            status: 500,
+            headers: { ...headers, 'Content-Type': 'application/json' },
+          });
+        }
+        const commits = JSON.parse(proc.stdout.toString());
+        return new Response(JSON.stringify(commits), {
+          headers: { ...headers, 'Content-Type': 'application/json' },
+        });
+      } catch (e) {
+        return new Response(
+          JSON.stringify({ error: 'Failed to fetch commits' }),
+          { status: 500, headers: { ...headers, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    // API: GitHub pull requests
+    if (url.pathname === '/github/pulls') {
+      try {
+        const proc = Bun.spawnSync(
+          [
+            'gh',
+            'pr',
+            'list',
+            '--repo',
+            'SynkraAI/aios-dashboard',
+            '--state',
+            'open',
+            '--json',
+            'number,title,state,author,createdAt,headRefName,url',
+            '--limit',
+            '20',
+          ],
+          { stdout: 'pipe', stderr: 'pipe' }
+        );
+        if (proc.exitCode !== 0) {
+          const err = proc.stderr.toString();
+          return new Response(JSON.stringify({ error: err }), {
+            status: 500,
+            headers: { ...headers, 'Content-Type': 'application/json' },
+          });
+        }
+        const pulls = JSON.parse(proc.stdout.toString());
+        return new Response(JSON.stringify(pulls), {
+          headers: { ...headers, 'Content-Type': 'application/json' },
+        });
+      } catch (e) {
+        return new Response(
+          JSON.stringify({ error: 'Failed to fetch pull requests' }),
+          { status: 500, headers: { ...headers, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    // API: GitHub issues
+    if (url.pathname === '/github/issues') {
+      try {
+        const proc = Bun.spawnSync(
+          [
+            'gh',
+            'issue',
+            'list',
+            '--repo',
+            'SynkraAI/aios-dashboard',
+            '--state',
+            'open',
+            '--json',
+            'number,title,state,author,createdAt,labels,url',
+            '--limit',
+            '20',
+          ],
+          { stdout: 'pipe', stderr: 'pipe' }
+        );
+        if (proc.exitCode !== 0) {
+          const err = proc.stderr.toString();
+          return new Response(JSON.stringify({ error: err }), {
+            status: 500,
+            headers: { ...headers, 'Content-Type': 'application/json' },
+          });
+        }
+        const issues = JSON.parse(proc.stdout.toString());
+        return new Response(JSON.stringify(issues), {
+          headers: { ...headers, 'Content-Type': 'application/json' },
+        });
+      } catch (e) {
+        return new Response(
+          JSON.stringify({ error: 'Failed to fetch issues' }),
+          { status: 500, headers: { ...headers, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
     // API: Health check
     if (url.pathname === '/health') {
       return new Response(
@@ -328,6 +464,9 @@ const _server = Bun.serve({
             'GET /stats': 'Aggregated statistics',
             'GET /transcripts': 'List Claude transcripts',
             'WS /stream': 'WebSocket for real-time events',
+            'GET /github/commits': 'Recent commits',
+            'GET /github/pulls': 'Open pull requests',
+            'GET /github/issues': 'Open issues',
             'GET /health': 'Health check',
           },
         }),
