@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { fn } from 'storybook/test';
 import {
   EmptyState,
   NoSearchResults,
@@ -8,9 +9,6 @@ import {
   OfflineState,
   ErrorState,
 } from './EmptyState';
-
-// Simple action logger for stories
-const action = (name: string) => (...args: unknown[]) => console.log(`[${name}]`, ...args);
 
 const meta: Meta<typeof EmptyState> = {
   title: 'UI/EmptyState',
@@ -60,7 +58,7 @@ export const WithAction: Story = {
     description: 'Get started by creating your first project.',
     action: {
       label: 'Create Project',
-      onClick: action('create-clicked'),
+      onClick: fn(),
     },
   },
   decorators: [
@@ -78,11 +76,11 @@ export const WithSecondaryAction: Story = {
     description: 'Try adjusting your search or filters.',
     action: {
       label: 'Clear Filters',
-      onClick: action('clear-clicked'),
+      onClick: fn(),
     },
     secondaryAction: {
       label: 'Learn More',
-      onClick: action('learn-more-clicked'),
+      onClick: fn(),
     },
   },
   decorators: [
@@ -129,7 +127,7 @@ export const CustomIcon: Story = {
     description: 'Start by adding your first layer to the canvas.',
     action: {
       label: 'Add Layer',
-      onClick: action('add-layer'),
+      onClick: fn(),
     },
   },
   decorators: [
@@ -147,7 +145,7 @@ export const SearchResults: Story = {
     <div className="w-96">
       <NoSearchResults
         query="test query"
-        onClear={action('clear-search')}
+        onClear={fn()}
       />
     </div>
   ),
@@ -156,7 +154,7 @@ export const SearchResults: Story = {
 export const Messages: Story = {
   render: () => (
     <div className="w-96">
-      <NoMessages onStartChat={action('start-chat')} />
+      <NoMessages onStartChat={fn()} />
     </div>
   ),
 };
@@ -172,7 +170,7 @@ export const Activity: Story = {
 export const Agents: Story = {
   render: () => (
     <div className="w-96">
-      <NoAgents onExplore={action('explore')} />
+      <NoAgents onExplore={fn()} />
     </div>
   ),
 };
@@ -180,7 +178,7 @@ export const Agents: Story = {
 export const Offline: Story = {
   render: () => (
     <div className="w-96">
-      <OfflineState onRetry={action('retry')} />
+      <OfflineState onRetry={fn()} />
     </div>
   ),
 };
@@ -188,7 +186,7 @@ export const Offline: Story = {
 export const Error: Story = {
   render: () => (
     <div className="w-96">
-      <ErrorState onRetry={action('retry')} />
+      <ErrorState onRetry={fn()} />
     </div>
   ),
 };
@@ -198,7 +196,7 @@ export const ErrorWithMessage: Story = {
     <div className="w-96">
       <ErrorState
         message="Failed to load data from the server."
-        onRetry={action('retry')}
+        onRetry={fn()}
       />
     </div>
   ),
@@ -208,22 +206,22 @@ export const AllPresets: Story = {
   render: () => (
     <div className="grid grid-cols-2 gap-6 w-[800px]">
       <div className="glass p-4 rounded-xl">
-        <NoSearchResults query="agents" onClear={action('clear')} />
+        <NoSearchResults query="agents" onClear={fn()} />
       </div>
       <div className="glass p-4 rounded-xl">
-        <NoMessages onStartChat={action('chat')} />
+        <NoMessages onStartChat={fn()} />
       </div>
       <div className="glass p-4 rounded-xl">
         <NoActivity />
       </div>
       <div className="glass p-4 rounded-xl">
-        <NoAgents onExplore={action('explore')} />
+        <NoAgents onExplore={fn()} />
       </div>
       <div className="glass p-4 rounded-xl">
-        <OfflineState onRetry={action('retry')} />
+        <OfflineState onRetry={fn()} />
       </div>
       <div className="glass p-4 rounded-xl">
-        <ErrorState onRetry={action('retry')} />
+        <ErrorState onRetry={fn()} />
       </div>
     </div>
   ),

@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { fn } from 'storybook/test';
 import { ChatInput } from './ChatInput';
-
-// Simple action logger for stories
-const action = (name: string) => (...args: unknown[]) => console.log(`[${name}]`, ...args);
 
 const meta: Meta<typeof ChatInput> = {
   title: 'Chat/ChatInput',
@@ -48,35 +46,35 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    onSend: action('send'),
+    onSend: fn(),
   },
 };
 
 export const WithAgentName: Story = {
   args: {
-    onSend: action('send'),
+    onSend: fn(),
     agentName: 'Copy Assistant',
   },
 };
 
 export const CustomPlaceholder: Story = {
   args: {
-    onSend: action('send'),
+    onSend: fn(),
     placeholder: 'Ask me anything about marketing...',
   },
 };
 
 export const Streaming: Story = {
   args: {
-    onSend: action('send'),
-    onStop: action('stop'),
+    onSend: fn(),
+    onStop: fn(),
     isStreaming: true,
   },
 };
 
 export const Disabled: Story = {
   args: {
-    onSend: action('send'),
+    onSend: fn(),
     disabled: true,
   },
 };
@@ -87,7 +85,7 @@ export const WithAttachments: Story = {
       <p className="text-sm text-secondary">
         Click the attachment button to add files (functionality simulated)
       </p>
-      <ChatInput onSend={action('send')} />
+      <ChatInput onSend={fn()} />
     </div>
   ),
 };
@@ -108,7 +106,7 @@ export const InChatContext: Story = {
         </div>
       </div>
       <ChatInput
-        onSend={action('send')}
+        onSend={fn()}
         agentName="Copy Assistant"
       />
     </div>
@@ -133,8 +131,8 @@ export const StreamingWithMessage: Story = {
         </div>
       </div>
       <ChatInput
-        onSend={action('send')}
-        onStop={action('stop')}
+        onSend={fn()}
+        onStop={fn()}
         isStreaming={true}
       />
     </div>
