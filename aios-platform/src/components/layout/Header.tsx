@@ -125,6 +125,7 @@ export function Header() {
       {/* Search Button - Opens Global Search */}
       <button
         onClick={globalSearch.open}
+        aria-label="Buscar agents, squads (⌘K)"
         className="flex-1 max-w-md h-10 px-3 md:px-4 flex items-center gap-2 md:gap-3 rounded-xl bg-white/5 hover:bg-white/10 border border-glass-border transition-colors text-left group"
       >
         <SearchIcon />
@@ -147,6 +148,7 @@ export function Header() {
             variant="ghost"
             size="icon"
             className="relative"
+            aria-label="Notificações"
             style={showNotifications ? {
               backgroundColor: 'var(--sidebar-active-bg)',
               color: 'var(--sidebar-active-text)',
@@ -227,6 +229,7 @@ export function Header() {
                               e.stopPropagation();
                               dismissNotification(notification.id);
                             }}
+                            aria-label="Dispensar notificação"
                             className="text-tertiary hover:text-primary transition-colors p-1"
                           >
                             <CloseIcon />
@@ -260,7 +263,7 @@ export function Header() {
           size="icon"
           onClick={toggleAgentExplorer}
           className={cn('hidden sm:flex', agentExplorerOpen && 'bg-emerald-500/10 text-emerald-500')}
-          title="Explorar Agents"
+          aria-label="Explorar Agents"
         >
           <CompassIcon />
         </GlassButton>
@@ -271,7 +274,7 @@ export function Header() {
           size="icon"
           onClick={toggleWorkflowView}
           className={cn('hidden md:flex', workflowViewOpen && 'bg-purple-500/10 text-purple-500')}
-          title="Visualizar Workflow"
+          aria-label="Visualizar Workflow"
         >
           <WorkflowIcon />
         </GlassButton>
@@ -281,6 +284,7 @@ export function Header() {
           variant="ghost"
           size="icon"
           onClick={toggleActivityPanel}
+          aria-label="Painel de Atividade"
           className={cn('hidden lg:flex', activityPanelOpen && 'bg-blue-500/10 text-blue-500')}
         >
           <ActivityIcon />
@@ -321,7 +325,7 @@ function AIOSMasterButton() {
       )}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      title="Falar com AIOS Master"
+      aria-label="Falar com AIOS Master"
     >
       <MasterIcon />
       <span className="hidden sm:inline text-sm font-medium">AIOS Master</span>
@@ -348,6 +352,7 @@ function UserMenu() {
     <div className="relative ml-2" ref={menuRef}>
       <button
         onClick={() => setShowMenu(!showMenu)}
+        aria-label="Menu do usuário"
         className="h-10 w-10 sm:h-9 sm:w-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-medium hover:scale-105 transition-transform touch-manipulation"
       >
         RC

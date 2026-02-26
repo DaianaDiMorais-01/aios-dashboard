@@ -247,6 +247,7 @@ function ImageAttachment({ attachment }: { attachment: MessageAttachment }) {
             {/* Close button */}
             <button
               className="absolute top-4 right-4 p-2 text-white/70 hover:text-white transition-colors"
+              aria-label="Fechar visualização"
               onClick={() => setShowLightbox(false)}
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -258,6 +259,7 @@ function ImageAttachment({ attachment }: { attachment: MessageAttachment }) {
             {/* Download button */}
             <button
               className="absolute top-4 left-4 flex items-center gap-2 px-3 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
+              aria-label="Baixar imagem"
               onClick={(e) => {
                 e.stopPropagation();
                 handleDownload();
@@ -366,7 +368,7 @@ function FileAttachment({ attachment }: { attachment: MessageAttachment }) {
       <button
         onClick={handleDownload}
         className="flex-shrink-0 p-2 text-tertiary hover:text-blue-400 transition-colors opacity-0 group-hover:opacity-100"
-        title="Download"
+        aria-label="Baixar arquivo"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />

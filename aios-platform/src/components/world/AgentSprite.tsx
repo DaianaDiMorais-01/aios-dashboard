@@ -53,6 +53,9 @@ export function AgentSprite({
 
   return (
     <motion.div
+      role="button"
+      aria-label={`Agent ${name}, ${status}`}
+      tabIndex={0}
       className="absolute flex flex-col items-center cursor-pointer"
       style={{
         // Z-ordering: agents sort by Y position, selected always on top
@@ -157,15 +160,15 @@ export function AgentSprite({
         >
           <svg width="16" height="10" viewBox="0 0 16 10">
             <rect x="0" y="2" width="16" height="8" fill="white" opacity="0.9" rx="4" />
-            <motion.circle cx="4" cy="6" r="1.5" fill="#636E72"
+            <motion.circle cx="4" cy="6" r="1.5" fill="var(--color-text-tertiary, #636E72)"
               animate={{ y: [0, -1.5, 0] }}
               transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
             />
-            <motion.circle cx="8" cy="6" r="1.5" fill="#636E72"
+            <motion.circle cx="8" cy="6" r="1.5" fill="var(--color-text-tertiary, #636E72)"
               animate={{ y: [0, -1.5, 0] }}
               transition={{ duration: 0.6, repeat: Infinity, delay: 0.15 }}
             />
-            <motion.circle cx="12" cy="6" r="1.5" fill="#636E72"
+            <motion.circle cx="12" cy="6" r="1.5" fill="var(--color-text-tertiary, #636E72)"
               animate={{ y: [0, -1.5, 0] }}
               transition={{ duration: 0.6, repeat: Infinity, delay: 0.3 }}
             />

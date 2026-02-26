@@ -149,7 +149,7 @@ export function GatherWorld() {
         <button
           onClick={() => setCurrentZoom(Math.min(currentZoom + 0.2, worldZoom === 'map' ? 2.0 : 2.5))}
           className="h-8 w-8 flex items-center justify-center rounded-lg glass-subtle hover:bg-white/15 transition-colors text-secondary hover:text-primary"
-          title="Zoom in"
+          aria-label="Aumentar zoom"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="12" y1="5" x2="12" y2="19" />
@@ -160,7 +160,7 @@ export function GatherWorld() {
         <button
           onClick={() => setCurrentZoom(1)}
           className="h-8 w-8 flex items-center justify-center rounded-lg glass-subtle hover:bg-white/15 transition-colors text-[10px] font-mono text-secondary hover:text-primary"
-          title="Reset zoom"
+          aria-label="Resetar zoom"
         >
           {Math.round(currentZoom * 100)}%
         </button>
@@ -168,7 +168,7 @@ export function GatherWorld() {
         <button
           onClick={() => setCurrentZoom(Math.max(currentZoom - 0.2, worldZoom === 'map' ? 0.4 : 0.5))}
           className="h-8 w-8 flex items-center justify-center rounded-lg glass-subtle hover:bg-white/15 transition-colors text-secondary hover:text-primary"
-          title="Zoom out"
+          aria-label="Diminuir zoom"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="5" y1="12" x2="19" y2="12" />
