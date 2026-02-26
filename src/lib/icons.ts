@@ -100,6 +100,20 @@ import {
   Layers,
   BookOpen,
   FileCode,
+
+  // Emotes
+  Heart,
+  ThumbsUp,
+  ThumbsDown,
+  Smile,
+  Frown,
+  Star,
+  Coffee,
+  Flame,
+
+  // Theme icons
+  Laptop,
+
   type LucideIcon,
 } from 'lucide-react';
 
@@ -215,6 +229,56 @@ export const iconSizes = {
 
 export type IconSize = keyof typeof iconSizes;
 
+// Numeric icon sizes for lucide-react size prop
+export const ICON_SIZES = {
+  xs: 12,
+  sm: 14,
+  md: 16,
+  lg: 20,
+  xl: 24,
+} as const;
+
+// ── Emote System ──
+
+export type EmoteKey = 'heart' | 'thumbsUp' | 'thumbsDown' | 'smile' | 'frown' | 'star' | 'coffee' | 'flame';
+
+export const EMOTE_LIST: Array<{ key: EmoteKey; label: string; Icon: LucideIcon }> = [
+  { key: 'heart', label: 'Love', Icon: Heart },
+  { key: 'thumbsUp', label: 'Like', Icon: ThumbsUp },
+  { key: 'thumbsDown', label: 'Dislike', Icon: ThumbsDown },
+  { key: 'smile', label: 'Happy', Icon: Smile },
+  { key: 'frown', label: 'Sad', Icon: Frown },
+  { key: 'star', label: 'Star', Icon: Star },
+  { key: 'coffee', label: 'Coffee', Icon: Coffee },
+  { key: 'flame', label: 'Fire', Icon: Flame },
+];
+
+// ── Icon Component Helpers ──
+
+/**
+ * Get a LucideIcon component from a string key (icon name or emoji).
+ * Falls back to FolderOpen if no match found.
+ */
+export function getIconComponent(key: string): LucideIcon {
+  // Check iconMap first
+  if (key in iconMap) {
+    return iconMap[key as IconName];
+  }
+  // Fallback for unknown keys/emojis
+  return FolderOpen;
+}
+
+// ── Theme Icons ──
+
+/** Map of theme IDs to their representative Lucide icons */
+export const ThemeIcons: Record<string, LucideIcon> = {
+  light: Sun,
+  dark: Moon,
+  glass: Layers,
+  matrix: Terminal,
+  system: Laptop,
+};
+
 // Export individual icons for direct imports
 export {
   LayoutDashboard,
@@ -291,5 +355,14 @@ export {
   Layers,
   BookOpen,
   FileCode,
+  Heart,
+  ThumbsUp,
+  ThumbsDown,
+  Smile,
+  Frown,
+  Star,
+  Coffee,
+  Flame,
+  Laptop,
   type LucideIcon,
 };
