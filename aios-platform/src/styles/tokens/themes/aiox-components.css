@@ -15,27 +15,74 @@
    ============================================ */
 
 /* ============================================
-   NUCLEAR RESET — Zero Radius Everywhere
-   Specificity: html[data-theme="aiox"] * (0-1-1 + *)
-   This is the brutalist core: NO rounded corners.
+   BRUTALIST RESET — Zero Radius on Containers
+   Targets containers, cards, buttons, inputs, panels.
+   Preserves: dots, indicators, pings, spinners, avatars, SVG.
    ============================================ */
 
-html[data-theme="aiox"] *,
-html[data-theme="aiox"] *::before,
-html[data-theme="aiox"] *::after {
+html[data-theme="aiox"] div,
+html[data-theme="aiox"] section,
+html[data-theme="aiox"] article,
+html[data-theme="aiox"] aside,
+html[data-theme="aiox"] main,
+html[data-theme="aiox"] nav,
+html[data-theme="aiox"] header,
+html[data-theme="aiox"] footer,
+html[data-theme="aiox"] button,
+html[data-theme="aiox"] input,
+html[data-theme="aiox"] select,
+html[data-theme="aiox"] textarea,
+html[data-theme="aiox"] a,
+html[data-theme="aiox"] [role="dialog"],
+html[data-theme="aiox"] [role="tablist"],
+html[data-theme="aiox"] [role="tab"],
+html[data-theme="aiox"] [role="tooltip"],
+html[data-theme="aiox"] [role="menu"],
+html[data-theme="aiox"] [role="listbox"] {
   border-radius: 0 !important;
 }
 
-/* Exception: scrollbar thumbs keep a tiny radius for usability */
+/* Preserve round shapes: status dots, pings, spinners, avatars */
+html[data-theme="aiox"] .status-online,
+html[data-theme="aiox"] .status-busy,
+html[data-theme="aiox"] .status-offline,
+html[data-theme="aiox"] [class*="rounded-full"]:is(
+  .h-2, .h-3, .w-2, .w-3, .h-4, .w-4,
+  [class*="animate-ping"], [class*="animate-pulse"]
+) {
+  border-radius: 9999px !important;
+}
+
+/* Small indicator dots (h-2 w-2, h-3 w-3) always round */
+html[data-theme="aiox"] span[class*="rounded-full"][class*="h-2"],
+html[data-theme="aiox"] span[class*="rounded-full"][class*="h-3"],
+html[data-theme="aiox"] span[class*="rounded-full"][class*="w-2"],
+html[data-theme="aiox"] span[class*="rounded-full"][class*="w-3"] {
+  border-radius: 9999px !important;
+}
+
+/* Ping/pulse animations stay round */
+html[data-theme="aiox"] [class*="animate-ping"],
+html[data-theme="aiox"] .animate-spin {
+  border-radius: 9999px !important;
+}
+
+/* Avatar circles stay round */
+html[data-theme="aiox"] [class*="avatar"],
+html[data-theme="aiox"] img[class*="rounded-full"] {
+  border-radius: 9999px !important;
+}
+
+/* Scrollbar thumb: tiny radius for usability */
 html[data-theme="aiox"] ::-webkit-scrollbar-thumb {
   border-radius: 2px !important;
 }
 
-/* Exception: status dots keep full radius */
-html[data-theme="aiox"] .status-online,
-html[data-theme="aiox"] .status-busy,
-html[data-theme="aiox"] .status-offline {
-  border-radius: 50% !important;
+/* Progress bar fill keeps radius for visual continuity */
+html[data-theme="aiox"] [class*="rounded-full"][class*="h-1"],
+html[data-theme="aiox"] [class*="rounded-full"][class*="h-1\\.5"],
+html[data-theme="aiox"] [class*="rounded-full"][class*="h-2"][class*="overflow"] {
+  border-radius: 0 !important;
 }
 
 /* ============================================
@@ -87,6 +134,34 @@ html[data-theme="aiox"] .glass-subtle {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   border-color: rgba(156, 156, 156, 0.1) !important;
+}
+
+/* ============================================
+   BACKDROP-BLUR KILL — Remove All Blur Effects
+   The AIOX cockpit uses solid opaque surfaces, not
+   frosted glass. Removes blur globally.
+   ============================================ */
+
+html[data-theme="aiox"] [class*="backdrop-blur"] {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* ============================================
+   SEMITRANSPARENT BG FIX — Solid Replacements
+   bg-black/50, bg-black/40 etc. are invisible
+   without blur on flat dark backgrounds.
+   Give them a solid surface color instead.
+   Excludes fullscreen overlays (inset-0).
+   ============================================ */
+
+html[data-theme="aiox"] [class*="backdrop-blur"]:not([class*="inset-0"]):not(.app-background) {
+  background: var(--aiox-surface) !important;
+}
+
+/* Fullscreen overlays stay dark + opaque */
+html[data-theme="aiox"] [class*="backdrop-blur"][class*="inset-0"] {
+  background: rgba(0, 0, 0, 0.85) !important;
 }
 
 /* ============================================
@@ -485,12 +560,14 @@ html[data-theme="aiox"] progress::-webkit-progress-value {
 }
 
 /* ============================================
-   GRADIENT OVERRIDES — Remove Glass Gradients
-   Components using bg-gradient-to-br still show
-   colored glass effects. Override to solid dark.
+   GRADIENT OVERRIDES — Tame Glass Gradients
+   Only override large container gradients (cards with
+   from-*-500/20). Preserve progress bar gradients and
+   inline-style gradients used for data visualization.
    ============================================ */
 
-html[data-theme="aiox"] [class*="bg-gradient-to"] {
+html[data-theme="aiox"] .glass-card[class*="bg-gradient-to"],
+html[data-theme="aiox"] div[class*="bg-gradient-to"][class*="border"] {
   background: var(--aiox-surface) !important;
 }
 
