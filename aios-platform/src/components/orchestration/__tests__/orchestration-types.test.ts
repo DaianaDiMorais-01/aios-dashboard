@@ -40,8 +40,8 @@ import type { TaskState } from '../orchestration-types';
 // phases
 // ---------------------------------------------------------------------------
 describe('phases', () => {
-  it('has exactly 4 phases', () => {
-    expect(phases).toHaveLength(4);
+  it('has exactly 5 phases', () => {
+    expect(phases).toHaveLength(5);
   });
 
   it('each phase has id, label, icon, and color', () => {
@@ -61,7 +61,7 @@ describe('phases', () => {
 
   it('contains the expected phase ids in order', () => {
     const ids = phases.map((p) => p.id);
-    expect(ids).toEqual(['analyzing', 'planning', 'executing', 'completed']);
+    expect(ids).toEqual(['analyzing', 'planning', 'awaiting_approval', 'executing', 'completed']);
   });
 
   it('contains distinct colors for each phase', () => {

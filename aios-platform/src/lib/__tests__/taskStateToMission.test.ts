@@ -6,6 +6,7 @@ function createBaseState(overrides?: Partial<TaskStateForMission>): TaskStateFor
     taskId: 'task-123',
     status: 'idle',
     demand: 'Create a landing page',
+    plan: null,
     squadSelections: [],
     agentOutputs: [],
     streamingOutputs: new Map(),
@@ -42,7 +43,7 @@ describe('taskStateToMission', () => {
     const orchNode = result!.nodes.find(n => n.id === 'orchestrator');
     expect(orchNode!.status).toBe('active');
     expect(orchNode!.progress).toBe(70);
-    expect(orchNode!.currentAction).toBe('Planejando squads...');
+    expect(orchNode!.currentAction).toBe('Planejando execução...');
   });
 
   it('maps completed status correctly', () => {
@@ -92,8 +93,8 @@ describe('taskStateToMission', () => {
       ],
     }));
 
-    const orchToSquad = result!.edges.find(e => e.id === 'ts-edge-orch-design');
-    const squadToEnd = result!.edges.find(e => e.id === 'ts-edge-design-end');
+    const orchToSquad = result!.edges.find(e => e.id === 'edge-orch-design');
+    const squadToEnd = result!.edges.find(e => e.id === 'edge-design-end');
 
     expect(orchToSquad).toBeDefined();
     expect(orchToSquad!.source).toBe('orchestrator');
@@ -116,8 +117,9 @@ describe('taskStateToMission', () => {
     }));
 
     const designNode = result!.nodes.find(n => n.id === 'ts-squad-design');
-    expect(designNode!.status).toBe('active');
-    expect(designNode!.progress).toBe(33); // 1/3 ≈ 33%
+    // With outputs but no active streaming, squad status is 'waiting'
+    expect(designNode!.status).toBe('waiting');
+    expect(designNode!.progress).toBe(0);
   });
 
   it('shows streaming squad as active with partial progress', () => {
