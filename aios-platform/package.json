@@ -1,13 +1,16 @@
 {
-  "name": "web",
+  "name": "@aios/dashboard",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.5.0",
+  "description": "AIOS Platform Dashboard — Vite + React SPA for AI agent orchestration",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "dev:full": "bash scripts/dev-full.sh",
     "engine": "cd engine && bun src/index.ts",
     "engine:dev": "cd engine && bun --watch src/index.ts",
+    "engine:project": "cd engine && bun bin/aios-engine.ts",
+    "aios": "bun packages/cli/bin/aios.ts",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",

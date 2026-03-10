@@ -277,4 +277,69 @@ export const engineApi = {
       method: 'POST',
       body: JSON.stringify({ bundleId }),
     }),
+
+  // Registry (project data — portable mode)
+  getProjectInfo: () =>
+    engineFetch<{
+      projectRoot: string;
+      aiosCore: string;
+      squads: string;
+      rules: string;
+      hasAiosCore: boolean;
+      hasSquads: boolean;
+      hasRules: boolean;
+    }>('/registry/project'),
+
+  getRegistrySquads: () =>
+    engineFetch<{
+      squads: Array<{
+        id: string;
+        name: string;
+        description?: string;
+        domain?: string;
+        agentCount: number;
+        taskCount: number;
+        hasConfig: boolean;
+      }>;
+      count: number;
+      projectRoot: string;
+    }>('/registry/squads'),
+
+  getRegistryAgents: (squad?: string) => {
+    const qs = squad ? `?squad=${encodeURIComponent(squad)}` : '';
+    return engineFetch<{
+      agents: Array<{
+        id: string;
+        name: string;
+        squadId: string;
+        role?: string;
+        description?: string;
+        filePath: string;
+      }>;
+      count: number;
+    }>(`/registry/agents${qs}`);
+  },
+
+  getRegistryAgent: (squadId: string, agentId: string) =>
+    engineFetch<{
+      id: string;
+      squadId: string;
+      name: string;
+      role?: string;
+      description?: string;
+      content: string;
+      filePath: string;
+    }>(`/registry/agents/${squadId}/${agentId}`),
+
+  getRegistryWorkflows: () =>
+    engineFetch<{
+      workflows: Array<{ id: string; name: string; description: string; phases: number; file: string }>;
+      count: number;
+    }>('/registry/workflows'),
+
+  getRegistryTasks: () =>
+    engineFetch<{
+      tasks: Array<{ id: string; name: string; file: string }>;
+      count: number;
+    }>('/registry/tasks'),
 };

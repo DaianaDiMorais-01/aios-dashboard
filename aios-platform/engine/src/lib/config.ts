@@ -70,23 +70,32 @@ function deepMerge<T extends Record<string, unknown>>(target: T, source: Record<
 export function loadConfig(): EngineConfig {
   const configPath = resolve(ENGINE_ROOT, 'engine.config.yaml');
 
+  let config: EngineConfig;
   if (!existsSync(configPath)) {
-    return { ...DEFAULTS };
+    config = { ...DEFAULTS };
+  } else {
+    const raw = readFileSync(configPath, 'utf-8');
+    const parsed = parseYaml(raw) as Record<string, unknown>;
+    config = deepMerge(DEFAULTS as EngineConfig & Record<string, unknown>, parsed) as EngineConfig;
+
+    // Initialize ProjectResolver from config's project section if present
+    const projectConfig = (parsed as Record<string, Record<string, string>>).project;
+    if (projectConfig) {
+      initProjectResolver({
+        projectRoot: projectConfig.root || undefined,
+        aiosCoreDir: projectConfig.aios_core || undefined,
+        squadsDir: projectConfig.squads || undefined,
+        rulesDir: projectConfig.rules || undefined,
+      });
+    }
   }
 
-  const raw = readFileSync(configPath, 'utf-8');
-  const parsed = parseYaml(raw) as Record<string, unknown>;
-  const config = deepMerge(DEFAULTS as EngineConfig & Record<string, unknown>, parsed) as EngineConfig;
-
-  // Initialize ProjectResolver from config's project section if present
-  const projectConfig = (parsed as Record<string, Record<string, string>>).project;
-  if (projectConfig) {
-    initProjectResolver({
-      projectRoot: projectConfig.root || undefined,
-      aiosCoreDir: projectConfig.aios_core || undefined,
-      squadsDir: projectConfig.squads || undefined,
-      rulesDir: projectConfig.rules || undefined,
-    });
+  // CLI / env overrides (highest priority)
+  if (process.env.ENGINE_PORT) {
+    config.server.port = Number(process.env.ENGINE_PORT);
+  }
+  if (process.env.ENGINE_HOST) {
+    config.server.host = process.env.ENGINE_HOST;
   }
 
   return config;

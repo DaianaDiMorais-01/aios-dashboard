@@ -1,5 +1,5 @@
 import { readFileSync, existsSync, readdirSync } from 'fs';
-import { basename } from 'path';
+import { basename, resolve } from 'path';
 import { parse as parseYaml } from 'yaml';
 import { ulid } from 'ulid';
 import type { SQLQueryBindings } from 'bun:sqlite';

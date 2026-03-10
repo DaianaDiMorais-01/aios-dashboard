@@ -1,5 +1,8 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { serveStatic } from 'hono/bun';
+import { existsSync } from 'fs';
+import { resolve } from 'path';
 import { loadConfig } from './lib/config';
 import { log, setLogLevel } from './lib/logger';
 import { initDb, closeDb } from './lib/db';
@@ -83,6 +86,30 @@ app.route('/cron', cron);
 app.route('/whatsapp', whatsapp);
 app.route('/registry', registry);
 
+// Serve dashboard static files if configured (AIOS_DASHBOARD_DIR env or ../dist/)
+const dashboardDir = process.env.AIOS_DASHBOARD_DIR
+  ? resolve(process.env.AIOS_DASHBOARD_DIR)
+  : resolve(import.meta.dir, '../../dist');
+
+if (existsSync(dashboardDir)) {
+  log.info('Serving dashboard', { path: dashboardDir });
+  app.use('/assets/*', serveStatic({ root: dashboardDir }));
+  app.use('/favicon.ico', serveStatic({ root: dashboardDir }));
+  app.use('/pwa-*', serveStatic({ root: dashboardDir }));
+  app.use('/manifest.webmanifest', serveStatic({ root: dashboardDir }));
+  // SPA fallback: any non-API HTML request gets index.html
+  const indexHtmlPath = resolve(dashboardDir, 'index.html');
+  app.get('*', async (c) => {
+    if (c.req.header('accept')?.includes('text/html')) {
+      const html = await Bun.file(indexHtmlPath).text();
+      return c.html(html);
+    }
+    return c.json({ error: 'Not found' }, 404);
+  });
+} else {
+  log.info('No dashboard dist found, API-only mode', { checked: dashboardDir });
+}
+
 // Catch-all 404
 app.notFound((c) => c.json({ error: 'Not found' }, 404));
 
@@ -116,6 +143,9 @@ const server = Bun.serve({
 });
 
 log.info(`Engine listening on http://${config.server.host}:${config.server.port}`);
+if (existsSync(dashboardDir)) {
+  log.info(`Dashboard: http://${config.server.host === '0.0.0.0' ? 'localhost' : config.server.host}:${config.server.port}/`);
+}
 log.info('Endpoints:', {
   system: '/health, /pool, /authority/*, /bundles',
   jobs: '/jobs',
@@ -127,6 +157,7 @@ log.info('Endpoints:', {
   memory: '/memory/:scope, /memory/recall, /memory/store',
   cron: '/cron (CRUD)',
   ws: 'ws://*/live',
+  dashboard: existsSync(dashboardDir) ? '/ (static SPA)' : 'not configured',
 });
 
 // Graceful shutdown

@@ -1,4 +1,6 @@
 import { apiClient } from './client';
+import { engineApi } from './engine';
+import { getEngineUrl } from '../../lib/connection';
 
 export interface WorkflowSummary {
   id: string;
@@ -78,6 +80,11 @@ export interface WorkflowSchema {
   triggerTypes: Record<string, string>;
 }
 
+/** Check if engine is available (URL configured) */
+function hasEngine(): boolean {
+  return !!getEngineUrl();
+}
+
 export const workflowsApi = {
   // Get workflow schema and types
   // GET /api/workflows/schema
@@ -85,12 +92,31 @@ export const workflowsApi = {
     return apiClient.get<WorkflowSchema>('/workflows/schema');
   },
 
-  // List all workflows
-  // GET /api/workflows
+  // List all workflows — engine-first for definitions, fallback to apiClient
   getWorkflows: async (params?: {
     status?: string;
     name?: string;
   }): Promise<{ total: number; workflows: WorkflowSummary[] }> => {
+    if (hasEngine() && !params?.status) {
+      try {
+        const data = await engineApi.getRegistryWorkflows();
+        let workflows: WorkflowSummary[] = data.workflows.map((w) => ({
+          id: w.id,
+          name: w.name,
+          description: w.description,
+          status: 'active' as const,
+          stepCount: w.phases,
+          createdAt: new Date().toISOString(),
+        }));
+        if (params?.name) {
+          const q = params.name.toLowerCase();
+          workflows = workflows.filter((w) => w.name.toLowerCase().includes(q));
+        }
+        return { total: workflows.length, workflows };
+      } catch {
+        // Engine unavailable — fall through
+      }
+    }
     return apiClient.get('/workflows', params);
   },
 
