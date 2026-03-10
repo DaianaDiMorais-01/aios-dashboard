@@ -52,7 +52,7 @@ export default defineConfig({
           environment: 'jsdom',
           setupFiles: ['./src/test/setup.ts'],
           include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-          exclude: ['node_modules', 'dist', '**/*.stories.*'],
+          exclude: ['node_modules', 'dist', 'legacy', '**/*.stories.*'],
           css: true,
           reporters: ['verbose'],
           testTimeout: 30000,
@@ -101,6 +101,7 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       exclude: [
         'node_modules/',
+        'legacy/',
         'src/test/',
         '**/*.d.ts',
         '**/*.config.*',

@@ -3,7 +3,7 @@
 # Used by husky pre-commit hook.
 
 # Get staged files in .aios-core/
-AIOS_CHANGES=$(git diff --cached --name-only -- ../.aios-core/ .aios-core/ 2>/dev/null)
+AIOS_CHANGES=$(git diff --cached --name-only -- ../.aios-core/ .aios-core/ legacy/.aios-core/ 2>/dev/null)
 
 if [ -n "$AIOS_CHANGES" ]; then
   REGISTRY="src/data/aios-registry.generated.ts"

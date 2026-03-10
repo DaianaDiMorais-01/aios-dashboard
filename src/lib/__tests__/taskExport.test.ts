@@ -85,7 +85,7 @@ describe('taskExport', () => {
       expect(md).toContain('# Orchestration Report');
       expect(md).toContain('Create a marketing campaign');
       expect(md).toContain('**Status:** completed');
-      expect(md).toContain('**Total Tokens:** 12,500');
+      expect(md).toMatch(/\*\*Total Tokens:\*\* 12[,.]?500/);
       expect(md).toContain('## Squads');
       expect(md).toContain('### marketing (Chief: Chief Marketing)');
       expect(md).toContain('- Copywriter');

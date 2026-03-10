@@ -17,8 +17,9 @@ import * as path from 'node:path';
 const SCRIPT_DIR = path.dirname(new URL(import.meta.url).pathname);
 const PROJECT_ROOT = path.resolve(SCRIPT_DIR, '..');
 
-// .aios-core lives two levels up from dashboard/aios-platform
+// .aios-core candidates (legacy/ after repo restructure, or parent dirs)
 const AIOS_CORE_CANDIDATES = [
+  path.resolve(PROJECT_ROOT, 'legacy/.aios-core'),
   path.resolve(PROJECT_ROOT, '../../.aios-core'),
   path.resolve(PROJECT_ROOT, '../../../.aios-core'),
   path.resolve(PROJECT_ROOT, '../.aios-core'),
