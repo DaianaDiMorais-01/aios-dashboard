@@ -2,6 +2,14 @@ import { readFileSync, existsSync } from 'fs';
 import { parse as parseYaml } from 'yaml';
 import { resolve } from 'path';
 import type { EngineConfig } from '../types';
+import {
+  getProjectPaths,
+  initProjectResolver,
+  projectPath,
+  aiosCorePath,
+  squadsPath,
+  rulesPath,
+} from './project-resolver';
 
 const ENGINE_ROOT = resolve(import.meta.dir, '../..');
 
@@ -68,8 +76,20 @@ export function loadConfig(): EngineConfig {
 
   const raw = readFileSync(configPath, 'utf-8');
   const parsed = parseYaml(raw) as Record<string, unknown>;
+  const config = deepMerge(DEFAULTS as EngineConfig & Record<string, unknown>, parsed) as EngineConfig;
 
-  return deepMerge(DEFAULTS as EngineConfig & Record<string, unknown>, parsed) as EngineConfig;
+  // Initialize ProjectResolver from config's project section if present
+  const projectConfig = (parsed as Record<string, Record<string, string>>).project;
+  if (projectConfig) {
+    initProjectResolver({
+      projectRoot: projectConfig.root || undefined,
+      aiosCoreDir: projectConfig.aios_core || undefined,
+      squadsDir: projectConfig.squads || undefined,
+      rulesDir: projectConfig.rules || undefined,
+    });
+  }
+
+  return config;
 }
 
 export function getEngineRoot(): string {
@@ -83,10 +103,16 @@ export function enginePath(...segments: string[]): string {
 
 // Resolve path relative to aios-platform root
 export function platformPath(...segments: string[]): string {
-  return resolve(ENGINE_ROOT, '..', ...segments);
+  return getProjectPaths().platformRoot
+    ? resolve(getProjectPaths().platformRoot, ...segments)
+    : resolve(ENGINE_ROOT, '..', ...segments);
 }
 
-// Resolve path relative to the apps root (where .aios-core lives)
+// Resolve path relative to the project root (where .aios-core lives)
+// Delegates to ProjectResolver for portable path resolution.
 export function appsRoot(...segments: string[]): string {
-  return resolve(ENGINE_ROOT, '..', '..', '..', ...segments);
+  return projectPath(...segments);
 }
+
+// Re-export ProjectResolver utilities for direct use
+export { projectPath, aiosCorePath, squadsPath, rulesPath, getProjectPaths };

@@ -1,6 +1,6 @@
 import { readFileSync, existsSync } from 'fs';
-import { resolve } from 'path';
 import { log } from '../lib/logger';
+import { rulesPath } from '../lib/config';
 import type { EngineConfig } from '../types';
 
 // ============================================================
@@ -168,9 +168,7 @@ function matchOperation(actual: string, pattern: string): boolean {
 
 function loadRules(): void {
   const possiblePaths = [
-    resolve(process.cwd(), '../../.claude/rules/agent-authority.md'),
-    resolve(process.cwd(), '../../../.claude/rules/agent-authority.md'),
-    resolve(process.cwd(), '.claude/rules/agent-authority.md'),
+    rulesPath('agent-authority.md'),
   ];
 
   let content: string | null = null;

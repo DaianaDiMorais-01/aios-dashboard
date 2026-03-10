@@ -1,7 +1,8 @@
 import { readFileSync, existsSync, readdirSync } from 'fs';
-import { resolve, basename } from 'path';
+import { basename } from 'path';
 import { parse as parseYaml } from 'yaml';
 import { log } from '../lib/logger';
+import { aiosCorePath } from '../lib/config';
 import type { EngineConfig } from '../types';
 
 // ============================================================
@@ -95,9 +96,7 @@ export function validateAgentForBundle(agentId: string, bundleId?: string): { va
 
 function loadBundles(): void {
   const bundleDirs = [
-    resolve(process.cwd(), '../../.aios-core/development/agent-teams'),
-    resolve(process.cwd(), '../../../.aios-core/development/agent-teams'),
-    resolve(process.cwd(), '.aios-core/development/agent-teams'),
+    aiosCorePath('development', 'agent-teams'),
   ];
 
   let loaded = 0;

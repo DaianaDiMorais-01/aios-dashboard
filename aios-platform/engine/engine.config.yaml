@@ -1,6 +1,15 @@
 # AIOS Agent Execution Engine — Configuration
 # Override defaults here. Engine reads this on boot.
 
+# Project root resolution (portable mode)
+# Empty = auto-detect by walking up from engine dir looking for .aios-core/
+# Set to absolute path to point engine at a specific project.
+project:
+  root: ""                       # auto-detect if empty
+  aios_core: ".aios-core"       # relative to root
+  squads: "squads"              # relative to root
+  rules: ".claude/rules"        # relative to root
+
 server:
   port: 4002
   host: "0.0.0.0"

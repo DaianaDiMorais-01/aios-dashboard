@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, writeFileSync, rmSync, readdirSync } from 'fs';
 import { resolve } from 'path';
-import { enginePath, platformPath } from '../lib/config';
+import { enginePath, projectPath } from '../lib/config';
 import { log } from '../lib/logger';
 import type { EngineConfig, Job } from '../types';
 
@@ -76,7 +76,7 @@ function isCodeRelated(squadId: string): boolean {
 }
 
 async function createWorktree(job: Job, workspacePath: string): Promise<WorkspaceInfo> {
-  const projectRoot = platformPath(); // aios-platform root
+  const projectRoot = projectPath(); // aios-platform root
   const branch = `job/${job.id}`;
 
   // Check if git repo exists — check parent dirs up to 3 levels
@@ -133,7 +133,7 @@ async function createWorktree(job: Job, workspacePath: string): Promise<Workspac
 
 function removeWorktree(workspacePath: string): void {
   try {
-    const projectRoot = platformPath();
+    const projectRoot = projectPath();
     const proc = Bun.spawnSync(
       ['git', 'worktree', 'remove', workspacePath, '--force'],
       { cwd: projectRoot, stdout: 'pipe', stderr: 'pipe' },

@@ -1,6 +1,6 @@
 import { readFileSync, existsSync } from 'fs';
 import { createHash } from 'crypto';
-import { appsRoot, platformPath } from '../lib/config';
+import { aiosCorePath, squadsPath } from '../lib/config';
 import { log } from '../lib/logger';
 import { recallMemories } from './memory-client';
 import type { EngineConfig, Job } from '../types';
@@ -130,8 +130,8 @@ function loadAgentFile(agentId: string, squadId: string): AgentMeta | null {
   // 1. .aios-core/development/agents/{agentId}.md (core agents)
   // 2. squads/{squadId}/agents/{agentId}.md (squad-specific agents)
   const paths = [
-    appsRoot('.aios-core', 'development', 'agents', `${agentId}.md`),
-    platformPath('squads', squadId, 'agents', `${agentId}.md`),
+    aiosCorePath('development', 'agents', `${agentId}.md`),
+    squadsPath(squadId, 'agents', `${agentId}.md`),
   ];
 
   for (const path of paths) {
@@ -193,9 +193,8 @@ function extractYamlField(yaml: string, field: string): string | null {
 function loadSquadContext(squadId: string): string | null {
   // Try squad config
   const paths = [
-    platformPath('squads', squadId, 'squad.yaml'),
-    platformPath('squads', squadId, 'config.yaml'),
-    appsRoot('squads', squadId, 'squad.yaml'),
+    squadsPath(squadId, 'squad.yaml'),
+    squadsPath(squadId, 'config.yaml'),
   ];
 
   for (const path of paths) {

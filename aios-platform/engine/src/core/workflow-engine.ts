@@ -1,11 +1,12 @@
 import { readFileSync, existsSync, readdirSync } from 'fs';
-import { resolve, basename } from 'path';
+import { basename } from 'path';
 import { parse as parseYaml } from 'yaml';
 import { ulid } from 'ulid';
 import type { SQLQueryBindings } from 'bun:sqlite';
 import { getDb } from '../lib/db';
 import { log } from '../lib/logger';
 import { broadcast } from '../lib/ws';
+import { aiosCorePath } from '../lib/config';
 import * as queue from './job-queue';
 import type { EngineConfig, Job, WorkflowState, WorkflowStatus, WSEventType } from '../types';
 
@@ -421,9 +422,7 @@ function inferSquadFromAgent(agentId: string): string {
 
 function loadWorkflowDefinitions(): void {
   const workflowDirs = [
-    resolve(process.cwd(), '../../.aios-core/development/workflows'),
-    resolve(process.cwd(), '../../../.aios-core/development/workflows'),
-    resolve(process.cwd(), '.aios-core/development/workflows'),
+    aiosCorePath('development', 'workflows'),
   ];
 
   let loaded = 0;
