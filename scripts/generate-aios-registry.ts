@@ -859,16 +859,12 @@ function generate(): void {
   }
 
   // --- Build output ---
-  const generatedAt = new Date().toISOString();
-
   const registryObject = {
     agents,
     tasks,
     workflows,
     checklists,
     meta: {
-      generatedAt,
-      aiosCoreRoot: AIOS_CORE,
       agentCount: agents.length,
       taskCount: tasks.length,
       workflowCount: workflows.length,
@@ -878,7 +874,6 @@ function generate(): void {
 
   const output = `// AUTO-GENERATED — do not edit manually
 // Run: npx tsx scripts/generate-aios-registry.ts
-// Generated: ${generatedAt}
 
 import type { AIOSRegistry } from './registry-types';
 

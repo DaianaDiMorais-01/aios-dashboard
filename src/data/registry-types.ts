@@ -113,8 +113,6 @@ export interface AIOSRegistry {
   workflows: WorkflowDefinition[];
   checklists: ChecklistDefinition[];
   meta: {
-    generatedAt: string;
-    aiosCoreRoot: string;
     agentCount: number;
     taskCount: number;
     workflowCount: number;

@@ -1,6 +1,5 @@
 // AUTO-GENERATED — do not edit manually
 // Run: npx tsx scripts/generate-aios-registry.ts
-// Generated: 2026-03-10T21:55:27.432Z
 
 import type { AIOSRegistry } from './registry-types';
 
@@ -224,8 +223,6 @@ export const aiosRegistry: AIOSRegistry = {
     }
   ],
   "meta": {
-    "generatedAt": "2026-03-10T21:55:27.432Z",
-    "aiosCoreRoot": "/private/tmp/aiox-dashboard-restructure/legacy/.aios-core",
     "agentCount": 0,
     "taskCount": 14,
     "workflowCount": 2,
