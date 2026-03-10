@@ -127,6 +127,18 @@ export default defineConfig({
           });
         },
       },
+      '/engine': {
+        target: 'http://localhost:4002',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/engine/, ''),
+        ws: true,
+        // Let HTML navigation requests fall through to the SPA
+        bypass(req) {
+          if (req.headers.accept?.includes('text/html')) {
+            return '/index.html';
+          }
+        },
+      },
     },
   },
   build: {
@@ -163,6 +175,10 @@ export default defineConfig({
             id.includes('node_modules/refractor/')
           ) {
             return 'markdown';
+          }
+          // Icons (stable, cache-friendly)
+          if (id.includes('node_modules/lucide-react/')) {
+            return 'icons';
           }
           // Chart libraries (if any)
           if (id.includes('node_modules/recharts/') || id.includes('node_modules/d3')) {

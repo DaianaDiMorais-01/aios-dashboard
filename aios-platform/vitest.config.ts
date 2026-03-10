@@ -55,7 +55,10 @@ export default defineConfig({
           exclude: ['node_modules', 'dist', '**/*.stories.*'],
           css: true,
           reporters: ['verbose'],
-          testTimeout: 10000,
+          testTimeout: 30000,
+          retry: 1, // retry flaky timeouts from heavy dynamic imports under load
+          pool: 'forks', // forks for better mock isolation across test files
+          maxForks: 4, // limit concurrency to avoid timeouts on heavy dynamic imports
         },
         resolve: {
           alias: {

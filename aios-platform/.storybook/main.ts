@@ -24,6 +24,7 @@ const config: StorybookConfig = {
 
     // Filter out PWA plugins
     if (config.plugins) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       config.plugins = (config.plugins as any[]).filter((plugin) => {
         if (!plugin) return false;
         if (typeof plugin === 'object' && 'name' in plugin) {

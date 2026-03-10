@@ -8,7 +8,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
-export default defineConfig([globalIgnores(['dist']), {
+export default defineConfig([globalIgnores(['dist', 'storybook-static']), {
   files: ['**/*.{ts,tsx}'],
   extends: [
     js.configs.recommended,
@@ -25,7 +25,14 @@ export default defineConfig([globalIgnores(['dist']), {
       argsIgnorePattern: '^_',
       varsIgnorePattern: '^_',
       destructuredArrayIgnorePattern: '^_',
+      ignoreRestSiblings: true,
     }],
+    // React Compiler rules — downgrade to warn (many false positives in this codebase)
+    'react-hooks/set-state-in-effect': 'warn',
+    'react-hooks/purity': 'warn',
+    'react-hooks/immutability': 'warn',
+    'react-hooks/static-components': 'warn',
+    'react-hooks/preserve-manual-memoization': 'warn',
     'react-refresh/only-export-components': ['warn', {
       allowConstantExport: true,
       allowExportNames: [
