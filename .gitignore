@@ -52,3 +52,8 @@ server/node_modules/
 
 # aios config (local secrets)
 .aios/
+
+# aios-core MCP servers (keep source, ignore deps/build)
+.aios-core/mcp-servers/*/node_modules/
+.aios-core/mcp-servers/*/dist/
+.aios-core/mcp-servers/*/.DS_Store
