@@ -106,6 +106,7 @@ export const LiveMetricCard = memo(function LiveMetricCard({
 
   useEffect(() => {
     if (prevRef.current !== value) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- legitimate animation trigger on value change
       setPulsing(true);
       prevRef.current = value;
       const timer = setTimeout(() => setPulsing(false), 600);

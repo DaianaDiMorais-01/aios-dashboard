@@ -33,6 +33,7 @@ export function OrchestrationActivityPanel() {
   // Elapsed time
   const [elapsed, setElapsed] = useState(0);
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- legitimate timer subscription syncing with external task state
     if (!liveTask?.startTime || liveTask.status === 'idle') { setElapsed(0); return; }
     if (liveTask.status === 'completed' || liveTask.status === 'failed') {
       setElapsed(Math.floor((Date.now() - liveTask.startTime) / 1000));

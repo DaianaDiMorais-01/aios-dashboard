@@ -494,6 +494,7 @@ export default function AgentDirectory() {
   useEffect(() => {
     if (registryTargetAgentId) {
       const target = aiosRegistry.agents.find((a) => a.id === registryTargetAgentId);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing selection from navigation store
       if (target) setSelectedAgent(target);
       clearRegistryTarget();
     }

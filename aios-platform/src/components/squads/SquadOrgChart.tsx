@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { GlassCard, Badge } from '../ui';
 import { cn } from '../../lib/utils';
@@ -16,6 +17,12 @@ const tierConfig: Record<AgentTier, { label: string; color: string; bg: string; 
 
 function AgentNode({ agent, index }: { agent: AgentSummary; index: number }) {
   const tier = tierConfig[agent.tier];
+  /* eslint-disable react-hooks/static-components -- Lucide icons are stateless; dynamic lookup is safe */
+  const iconElement = useMemo(() => {
+    const IconComp = getIconComponent(agent.icon || agent.name.charAt(0));
+    return <IconComp size={14} />;
+  }, [agent.icon, agent.name]);
+  /* eslint-enable react-hooks/static-components */
 
   return (
     <motion.div
@@ -25,7 +32,7 @@ function AgentNode({ agent, index }: { agent: AgentSummary; index: number }) {
     >
       <GlassCard padding="sm" className="w-36 text-center">
         <div className={cn('w-8 h-8 rounded-lg mx-auto flex items-center justify-center', tier.bg)}>
-          {(() => { const Icon = getIconComponent(agent.icon || agent.name.charAt(0)); return <Icon size={14} />; })()}
+          {iconElement}
         </div>
         <p className="text-xs font-medium text-primary mt-1.5 truncate">{agent.name}</p>
         <Badge variant="default" size="sm" className={cn('mt-1', tier.bg)}>

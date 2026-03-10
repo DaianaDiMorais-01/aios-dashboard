@@ -28,6 +28,7 @@ export function PresenceAvatars() {
   const currentView = useUIStore((s) => s.currentView);
   const [showDropdown, setShowDropdown] = useState(false);
 
+  // eslint-disable-next-line react-hooks/purity -- Date.now() needed to filter stale presence data
   const onlineUsers = users.filter((u) => Date.now() - u.lastSeen < 300000);
   const sameViewCount = onlineUsers.filter((u) => u.currentView === currentView).length;
 

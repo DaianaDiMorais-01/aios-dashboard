@@ -152,6 +152,7 @@ export function OnboardingTour({ onComplete }: OnboardingTourProps) {
       const el = document.querySelector(step.target);
       if (el) {
         const rect = el.getBoundingClientRect();
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- DOM measurement must happen in effect
         setSpotlightRect(rect);
         return;
       }

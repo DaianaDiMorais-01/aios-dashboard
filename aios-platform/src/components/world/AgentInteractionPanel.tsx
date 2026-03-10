@@ -99,9 +99,10 @@ export function AgentInteractionPanel({
   );
 
   // Filter events for this agent
+  const agentName = agent?.name;
   const agentEvents = useMemo(() => {
-    if (!agent?.name) return [];
-    const name = agent.name.toLowerCase();
+    if (!agentName) return [];
+    const name = agentName.toLowerCase();
     return monitorEvents
       .filter((e) => {
         const eName = e.agent.toLowerCase();
@@ -109,7 +110,7 @@ export function AgentInteractionPanel({
       })
       .slice(-50) // Last 50 events
       .reverse();
-  }, [monitorEvents, agent?.name]);
+  }, [monitorEvents, agentName]);
 
   const tabs: Array<{ id: PanelTab; label: string; icon: string }> = [
     { id: 'chat', label: 'Chat', icon: 'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z' },

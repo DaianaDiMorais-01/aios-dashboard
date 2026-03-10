@@ -33,7 +33,7 @@ function useTypewriter(text: string, active: boolean, speed = 30) {
 
   useEffect(() => {
     if (!active) {
-      // When not actively typing, show full text immediately
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing display text when typewriter is inactive
       setDisplayed(text);
       indexRef.current = text.length;
       return;

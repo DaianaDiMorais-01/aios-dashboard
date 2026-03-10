@@ -108,6 +108,7 @@ export default function InsightsView({ viewToggle }: { viewToggle?: React.ReactN
     const errorRate = execs.length > 0 ? ((failed.length / execs.length) * 100).toFixed(1) : '0';
 
     // Weekly velocity (stories completed in last 7 days)
+    // eslint-disable-next-line react-hooks/purity -- Date.now() is stable within this memoized computation
     const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
     const recentCompleted = completed.filter(e => new Date(e.createdAt || '').getTime() > weekAgo);
 

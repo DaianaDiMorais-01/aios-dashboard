@@ -270,6 +270,7 @@ export default function WorkflowCatalog() {
   useEffect(() => {
     if (registryTargetWorkflowId) {
       const target = aiosRegistry.workflows.find((w) => w.id === registryTargetWorkflowId);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing selection from navigation store
       if (target) setSelectedWorkflow(target);
       clearRegistryTarget();
     }
