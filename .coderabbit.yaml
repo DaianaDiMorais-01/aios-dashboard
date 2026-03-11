@@ -1,74 +1,66 @@
 # CodeRabbit — aiox-dashboard
 # Vite + React 19 SPA | Vitest | Playwright E2E | Supabase | TanStack Query
+# Inherits global config from root .coderabbit.yaml
 version: 2
+inheritance: true
 
 reviews:
-  profile: chill
-  high_level_summary: true
-  poem: false
-
   path_instructions:
     # ── Components ─────────────────────────────────────────────
     - path: "src/components/**"
       instructions: |
         React 19 component library with Radix UI primitives.
-        - Props must be typed via interface (no inline object types)
+        - Props via interface (no inline object types)
         - Use cn() from lib/utils for conditional classNames
-        - No direct DOM manipulation — use refs when necessary
+        - No direct DOM manipulation — use refs
         - Prefer composition over prop drilling
-        - Components must be exportable without side effects
-        - Flag any useState with complex objects — consider useReducer or Zustand store
+        - Components exportable without side effects
+        - Complex state → useReducer or Zustand store (not useState with objects)
 
     # ── Hooks ──────────────────────────────────────────────────
     - path: "src/hooks/**"
       instructions: |
         Custom React hooks.
         - Must start with "use" prefix
-        - Return types must be explicitly typed
-        - Side effects must be properly cleaned up in useEffect
-        - TanStack Query hooks should use queryKey factories from a central location
+        - Explicit return types
+        - Side effects cleaned up in useEffect
+        - TanStack Query hooks use queryKey factories
 
     # ── Stores (Zustand) ──────────────────────────────────────
     - path: "src/stores/**"
       instructions: |
         Zustand state management.
-        - Each store must be typed with an interface
+        - Each store typed with interface
         - Use selectors to prevent unnecessary re-renders
-        - Async actions must handle loading/error states
-        - No direct Supabase calls in stores — use services layer
+        - Async actions handle loading/error states
+        - No direct Supabase calls — use services layer
 
     # ── Services ───────────────────────────────────────────────
     - path: "src/services/**"
       instructions: |
         API/data service layer.
-        - All Supabase operations go through typed client
-        - Functions must return typed responses (no `any`)
-        - Error handling must be consistent (try/catch with typed errors)
+        - All Supabase operations via typed client
+        - Typed responses (no `any`)
+        - Consistent error handling (try/catch with typed errors)
         - No UI logic — services are framework-agnostic
 
     # ── Tests (Unit / Integration) ─────────────────────────────
     - path: "src/__tests__/**"
       instructions: |
         Vitest unit and integration tests.
-        - Use describe/it pattern with clear test names
+        - describe/it pattern with clear test names
         - Mock external services, not internal modules
-        - Prefer testing behavior over implementation
-        - Use testing-library queries (getByRole > getByTestId)
-
-    - path: "src/test/**"
-      instructions: |
-        Test utilities and setup files.
-        - Keep test helpers generic and reusable
-        - Setup files must not import app-specific modules
+        - Test behavior over implementation
+        - testing-library queries (getByRole > getByTestId)
 
     # ── E2E Tests (Playwright) ─────────────────────────────────
     - path: "e2e/**"
       instructions: |
         Playwright end-to-end tests.
-        - Use Page Object Model pattern for page interactions
-        - Prefer locators over selectors (getByRole, getByText)
-        - Tests must be independent — no shared state between tests
-        - Use fixtures for common setup/teardown
+        - Page Object Model pattern
+        - Prefer locators (getByRole, getByText)
+        - Tests are independent — no shared state
+        - Use fixtures for setup/teardown
         - Assert user-visible behavior, not DOM structure
 
     # ── Engine (Bun backend) ───────────────────────────────────
@@ -76,53 +68,36 @@ reviews:
       instructions: |
         Bun-based backend engine for AI agent orchestration.
         - No Express/Node-specific APIs — Bun runtime only
-        - Types must be defined for all message payloads
-        - Error handling must be graceful (no unhandled rejections)
+        - Types for all message payloads
+        - Graceful error handling (no unhandled rejections)
 
-    # ── Docker / Infrastructure ────────────────────────────────
+    # ── Docker ─────────────────────────────────────────────────
     - path: "Dockerfile"
       instructions: |
         Multi-stage Docker build.
-        - Verify build stages are optimized for caching
+        - Build stages optimized for caching
         - No secrets in Dockerfile — use build args or runtime env
-        - Ensure COPY commands use .dockerignore correctly
 
     - path: "docker-compose.yaml"
       instructions: |
-        Local development composition.
-        - Verify volume mounts don't leak host secrets
-        - Health checks must be defined for all services
+        Local dev composition.
+        - Volume mounts don't leak host secrets
+        - Health checks defined for all services
 
-    # ── Config Files ───────────────────────────────────────────
+    # ── Config ─────────────────────────────────────────────────
     - path: "vite.config.ts"
       instructions: |
-        Vite build config.
-        - Verify alias paths match tsconfig paths
-        - Check chunk splitting strategy for optimal loading
-        - Ensure env variable prefixes are correct (VITE_)
+        - Alias paths match tsconfig paths
+        - Chunk splitting strategy for optimal loading
+        - Env variable prefix: VITE_
 
     - path: "playwright.config.ts"
       instructions: |
-        Playwright test config.
-        - Verify baseURL matches dev server
-        - Check timeout values are reasonable
-        - Ensure projects cover required browsers
+        - baseURL matches dev server
+        - Reasonable timeout values
+        - Projects cover required browsers
 
   path_filters:
-    - "!**/node_modules/**"
-    - "!**/dist/**"
-    - "!**/*.lock"
-    - "!**/package-lock.json"
     - "!**/patches/**"
     - "!**/legacy/**"
     - "!**/storybook-static/**"
-
-tools:
-  eslint:
-    enabled: true
-  biome:
-    enabled: false
-  markdownlint:
-    enabled: false
-  shellcheck:
-    enabled: true
